@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+
+  "exclude": ["node_modules/"],
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "es6",
+    "rootDir": ".",
+    "baseUrl": "../",
+    "paths": {
+      "src/*": [
+        "../src/*"
+      ]
+    },
+
+    "moduleResolution": "node",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  }
+}

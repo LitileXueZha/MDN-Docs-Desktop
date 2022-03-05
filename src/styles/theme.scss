@@ -1,0 +1,22 @@
+// primer-colors-[dark|light]
+@import '@primer/primitives/dist/scss/colors/_light.scss';
+@import '@primer/primitives/dist/scss/colors/_dark.scss';
+
+
+@media (prefers-color-scheme: light) {
+    :root {
+        @include primer-colors-light;
+        color-scheme: light;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        @include primer-colors-dark;
+        color-scheme: dark;
+    }
+}
+
+html, body {
+    background-color: var(--color-canvas-default);
+    color: var(--color-fg-default);
+}

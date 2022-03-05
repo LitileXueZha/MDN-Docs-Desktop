@@ -1,0 +1,23 @@
+@import './styles/variables.scss';
+@import './styles/theme.scss';
+@import './styles/typography.scss';
+
+@font-face {
+    font-family: NotoColorEmoji;
+    src: url('../assets/NotoColorEmoji.ttf');
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+    font: 400 $font-size $font-family;
+    line-height: $line-height;
+    text-size-adjust: 100%;
+}
+
+.titlebar {
+    -webkit-app-region: drag;
+    width: 100%;
+    background-color: coral;
+    height: 32px;
+}

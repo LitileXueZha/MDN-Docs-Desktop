@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+.nyc_output/
+.vscode/
+.DS_Store/
+.cache/
+
+package-lock.json
+*.log
+npm-debug.log*
+
+
+rcedit.exe
+assets/NotoColorEmoji.ttf
