@@ -77,9 +77,9 @@ class Watcher extends EventEmitter {
                 mapHandle = await fs.open(`${outputFile}.map`, 'w');
             }
             this.fHandles[entryFile] = {
-                name: outputFile,
                 handle,
                 mapHandle,
+                sourceMapComment: `/*# sourceMappingURL=${name}.css.map */`,
             };
         };
         await Promise.all(input.map(addFileHandle));
@@ -98,7 +98,7 @@ class Watcher extends EventEmitter {
         let count = 0;
         const buildTask = async (entryFile) => {
             const { output } = cssCompileOptions;
-            const { name, handle, mapHandle } = this.fHandles[entryFile];
+            const { handle, mapHandle, sourceMapComment } = this.fHandles[entryFile];
             try {
                 const res = sass.compile(entryFile, output);
 
@@ -109,7 +109,7 @@ class Watcher extends EventEmitter {
                     await mapHandle.truncate(0);
                     await mapHandle.write(JSON.stringify(res.sourceMap), 0);
                     await mapHandle.sync();
-                    await handle.write(`/*# sourceMappingURL=${name} */`, res.css.length);
+                    await handle.write(sourceMapComment, res.css.length);
                 }
                 await handle.sync();
             } catch (e) {

@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "watch": "node --no-deprecation scripts/watch.js",
+    "watch": "node scripts/watch.js",
     "watch-electron": "rollup -c -w",
     "watch-js": "cd src && rollup -c -w",
     "compile-css": "sass src/index.scss dist/index.css -s compressed -I node_modules/@primer/primitives/dist/scss -c",
