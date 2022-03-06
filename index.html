@@ -3,30 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src http://localhost:8012">
     <title>MDN Docs Desktop</title>
     <link rel="shortcut icon" href="./assets/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="./dist/index.css">
 </head>
 <body>
     <div class="titlebar"></div>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
-    <br>
-    <a href="/zh-CN/values">zh-CN values</a>
-    <button id="open">打开弹窗</button>
-    <button id="open1">关于</button>
-    <button id="open2">表情面板</button>
-    <label for="l1">
-        <input type="checkbox" name="" id="l1">
-        😀 复选框
-    </label>
-    <label for="l2">
-        <input type="radio" name="" id="l2">
-        单选框
-    </label>  
+    <main class="container">
+        <h1>Hello World!</h1>
+        We are using Node.js <span id="node-version"></span>,
+        Chromium <span id="chrome-version"></span>,
+        and Electron <span id="electron-version"></span>.
+        <br>
+        <a href="/zh-CN/values">zh-CN values</a>
+        <button id="open">打开弹窗</button>
+        <button id="open1">关于</button>
+        <button id="open2">表情面板</button>
+        <label for="l1">
+            <input type="checkbox" name="" id="l1">
+            😀 复选框
+        </label>
+        <label for="l2">
+            <input type="radio" name="" id="l2">
+            单选框
+        </label>
+    </main>
+    <div class="statusbar"></div>
 
     <script src="./dist/index.js"></script>
 </body>

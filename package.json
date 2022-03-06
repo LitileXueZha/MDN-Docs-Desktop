@@ -6,9 +6,10 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "watch": "node --no-deprecation scripts/watch.js",
     "watch-electron": "rollup -c -w",
     "watch-js": "cd src && rollup -c -w",
-    "compile-css": "sass src/index.scss dist/index.css -s compressed -I node_modules -c",
+    "compile-css": "sass src/index.scss dist/index.css -s compressed -I node_modules/@primer/primitives/dist/scss -c",
     "test": "mocha"
   },
   "repository": {
@@ -31,8 +32,10 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.1.3",
     "@rollup/plugin-typescript": "^8.3.1",
+    "@rollup/plugin-virtual": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^5.13.0",
     "@typescript-eslint/parser": "^5.13.0",
+    "chokidar": "^3.5.3",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "debug": "^4.3.3",

@@ -1,6 +1,6 @@
 // primer-colors-[dark|light]
-@import '@primer/primitives/dist/scss/colors/_light.scss';
-@import '@primer/primitives/dist/scss/colors/_dark.scss';
+@import 'colors/_light.scss';
+@import 'colors/_dark.scss';
 
 
 @media (prefers-color-scheme: light) {
