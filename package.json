@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/LitileXueZha/MDN-Docs-Desktop#readme",
   "devDependencies": {
+    "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.1.3",
@@ -43,6 +44,7 @@
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
+    "html-minifier-terser": "^7.0.0-alpha.1",
     "rollup": "^2.69.1",
     "sass": "^1.49.9",
     "typescript": "^4.6.2"

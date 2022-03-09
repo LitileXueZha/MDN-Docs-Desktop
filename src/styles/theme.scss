@@ -1,18 +1,24 @@
-// primer-colors-[dark|light]
-@import 'colors/_light.scss';
-@import 'colors/_dark.scss';
+@import './colors.scss';
 
 
-@media (prefers-color-scheme: light) {
-    :root {
-        @include primer-colors-light;
-        color-scheme: light;
-    }
+// custom variables here
+@mixin colors-light {
+    --bg-canvas-hover: var(--color-scale-gray-2);
+}
+@mixin colors-dark {
+    --bg-canvas-hover: var(--color-scale-gray-6);
+}
+
+:root {
+    color-scheme: light;
+    @include primer-colors-light;
+    @include colors-light;
 }
 @media (prefers-color-scheme: dark) {
     :root {
-        @include primer-colors-dark;
         color-scheme: dark;
+        @include primer-colors-dark;
+        @include colors-dark;
     }
 }
 

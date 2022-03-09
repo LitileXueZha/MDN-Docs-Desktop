@@ -1,16 +1,23 @@
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs/promises';
 import {
     app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog,
+    protocol,
+    session,
 } from 'electron';
-import debug from 'debug';
+import mainWindow from 'e/windows/main';
+import setting from 'e/windows/setting';
+import { IPC_CONTEXT_MENU, IPC_OPEN_DIALOG } from 'e/constants';
+import aps from 'e/modules/AppSettings';
 import { version } from '../package.json';
 
+process.env.DEBUG = '*';
+process.env.DEBUG_COLORS = 1;
+const debug = require('debug');
 const log = debug('log');
 
 // eslint-disable-next-line
 export async function startup() {
-    nativeTheme.themeSource = 'dark';
     log('booting %o', 'MDN-Docs-Desktop');
     app.on('window-all-closed', () => {
         if (process.platform !== 'darwin') {
@@ -19,7 +26,7 @@ export async function startup() {
     });
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
+            mainWindow.create();
         }
     });
     // app.addRecentDocument(path.join(__dirname, '../index.html'));
@@ -28,60 +35,67 @@ export async function startup() {
             title: '新窗口',
             description: '新建一个窗口',
             program: process.execPath,
-            arguments: '--new-window',
+            arguments: path.resolve(__dirname, '..'),
             iconPath: process.execPath,
             iconIndex: 0,
         },
     ]);
 
-    await app.whenReady();
-    const win = await createWindow();
-
-    const ctxMenu = Menu.buildFromTemplate([
-        { label: '返回', type: 'normal' },
-        { label: '前进', type: 'normal' },
+    protocol.registerSchemesAsPrivileged([
         {
-            label: '重新加载', type: 'normal', role: 'forcereload', accelerator: 'Ctrl+R',
-        },
-        { type: 'separator' },
-        {
-            label: '暗黑主题',
-            type: 'checkbox',
-            checked: true,
-            click: (e) => {
-                if (e.checked) {
-                    nativeTheme.themeSource = 'dark';
-                    return;
-                }
-                nativeTheme.themeSource = 'light';
+            scheme: 'mdv',
+            privileges: {
+                secure: true, standard: true, supportFetchAPI: true, corsEnabled: true,
             },
         },
-        { label: 'Item3Item3Item3Item3Item3', type: 'radio', checked: true },
-        { label: '刷新', role: 'reload' },
-        { label: '检查', role: 'toggleDevTools', accelerator: 'F12' },
-        { type: 'separator' },
-        {
-            label: '重新启动',
-            type: 'normal',
-            click: () => {
-                app.relaunch();
-                app.exit(0);
-            },
-        },
-        { label: '退出', role: 'quit', accelerator: 'Ctrl+Q' },
     ]);
-
-    win.webContents.on('context-menu', () => {
-        ctxMenu.popup();
+    await app.whenReady();
+    protocol.registerBufferProtocol('mdv', async (req, callback) => {
+        const id = req.url.substring('mdv://internal-files/'.length);
+        log(id, id.endsWith('.html'));
+        if (id.endsWith('.html')) {
+            const { minify } = require('html-minifier-terser');
+            const html = await fs.readFile(path.resolve(__dirname, '../index.html'), 'utf-8');
+            const minifyHtml = await minify(html, {
+                collapseWhitespace: true,
+                keepClosingSlash: true,
+                removeComments: true,
+                removeRedundantAttributes: true,
+                removeScriptTypeAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                useShortDoctype: true,
+            });
+            callback({ mimeType: 'text/html', data: Buffer.from(minifyHtml) });
+            return;
+        }
+        let mimeType = 'text/plain';
+        if (id.endsWith('.css')) {
+            mimeType = 'text/css';
+        } else if (id.endsWith('.js')) {
+            mimeType = 'application/javascript';
+        }
+        const data = await fs.readFile(path.resolve(__dirname, '..', id));
+        callback({ mimeType, data });
     });
-    win.webContents.openDevTools();
+    // session.defaultSession.webRequest.onBeforeRequest({urls:['*://*/*']}, (details, callback) => {
+    //     console.log(details.url);
+    //     callback({});
+    // });
+    await aps.load();
+    await mainWindow.startup();
+    const [ctxMenu, ctrlButtons] = await Promise.all([
+        import('e/modules/ContextMenu'),
+        import('e/modules/ControlButtons'),
+    ]);
+    ctxMenu.default.start();
+    ctrlButtons.default.start();
 
     const versions = Object.keys(process.versions).map((k) => `${k}: ${process.versions[k]}`).join('\n');
-    ipcMain.on('opendialog', (ev, type) => {
+    ipcMain.on(IPC_OPEN_DIALOG, (ev, type) => {
         if (type === 1) {
-            dialog.showMessageBox(BrowserWindow.getAllWindows()[0], {
+            dialog.showMessageBox(BrowserWindow.fromWebContents(ev.sender), {
                 type: 'info',
-                defaultId: 0,
+                defaultId: 1,
                 buttons: ['复制', '确定'],
                 // title: 'MDN Docs Desktop',
                 message: 'MDN Docs Desktop',
@@ -96,36 +110,9 @@ export async function startup() {
             });
             app.showAboutPanel();
         } else if (type === 3) {
-            app.showEmojiPanel();
+            // app.showEmojiPanel();
+            // createWindow(win, true);
+            setting.create();
         }
     });
-}
-
-async function createWindow() {
-    const win = new BrowserWindow({
-        width: 800,
-        height: 600,
-        minWidth: 360,
-        frame: false,
-        useContentSize: true,
-        titleBarStyle: 'hidden',
-        // titleBarOverlay: true,
-        titleBarOverlay: {
-            color: '#2f3241',
-            symbolColor: '#74b1be',
-            height: 32,
-        },
-        // transparent: true,
-        webPreferences: {
-            preload: path.join(__dirname, 'renderer.js'),
-            spellcheck: false,
-            enableWebSQL: false,
-        },
-    });
-
-    win.on('ready-to-show', () => {
-        log('createWindow');
-    });
-    await win.loadFile(path.resolve(__dirname, '../index.html'));
-    return win;
 }

@@ -11,5 +11,6 @@ package-lock.json
 npm-debug.log*
 
 
+jsconfig.json
 rcedit.exe
 assets/NotoColorEmoji.ttf

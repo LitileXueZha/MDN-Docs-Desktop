@@ -10,8 +10,6 @@ const log = require('./log.js');
 
 
 const $ev = new EventEmitter();
-const ELECTRON = path.resolve(__dirname, '../rollup.config.js');
-const JS = path.resolve(__dirname, '../src/rollup.config.js');
 const PORT = 8012;
 
 const cssCompileOptions = {
@@ -35,15 +33,11 @@ class Watcher extends EventEmitter {
 
     async start() {
         log.start = Date.now();
-        const loadTasks = [ELECTRON, JS].map((v) => loadConfigFile(v));
-        const [electron, js] = await Promise.all(loadTasks);
-        electron.warnings.flush();
-        js.warnings.flush();
+        const rollc = await loadConfigFile(path.resolve(__dirname, '../rollup.config.js'));
         // const bundle = await rollup.rollup(res.options[0]);
         // const { output } = await bundle.write(res.options[0].output[0]);
         // await bundle.close();
-        const options = electron.options.concat(js.options);
-        const watcher = rollup.watch(options);
+        const watcher = rollup.watch(rollc.options);
         watcher.on('event', (ev) => {
             if (ev.code === 'BUNDLE_END') {
                 const { watchFiles } = ev.result;
@@ -55,14 +49,13 @@ class Watcher extends EventEmitter {
                 $ev.emit('livereload', ev.error);
             }
             ev?.result?.close();
-            electron.warnings.flush();
-            js.warnings.flush();
+            rollc.warnings.flush();
         });
-        await this.css();
         const sseWatcher = chokidar.watch(sseWatches);
         sseWatcher.on('all', () => {
             $ev.emit('livereload');
         });
+        await this.css();
         log('watching');
     }
 
@@ -82,6 +75,7 @@ class Watcher extends EventEmitter {
                 sourceMapComment: `/*# sourceMappingURL=${name}.css.map */`,
             };
         };
+        await fs.mkdir('dist', { recursive: true }); // supress file open error
         await Promise.all(input.map(addFileHandle));
 
         const cssWatcher = chokidar.watch('./src/**/*.scss');
@@ -135,10 +129,14 @@ class Watcher extends EventEmitter {
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.write('event: sse\ndata: connected\n\n');
-        $ev.once('livereload', (err) => {
+        const sendReloadMessage = (err) => {
             const data = JSON.stringify(err ?? { reload: 1 });
             res.end(`event: message\ndata: ${data}\n\n`);
             // log('SSE reload');
+        };
+        $ev.once('livereload', sendReloadMessage);
+        req.on('close', () => {
+            $ev.removeListener('livereload', sendReloadMessage);
         });
     }
 }
@@ -147,5 +145,4 @@ new Watcher().start();
 http.createServer(Watcher.sse)
     .listen(PORT, () => {
         log('SSE listen on http://localhost:%c', PORT);
-    })
-    .on('close', () => $ev.removeAllListeners('livereload'));
+    });

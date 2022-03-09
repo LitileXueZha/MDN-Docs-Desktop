@@ -1,11 +1,7 @@
 @use 'sass:math';
 
 $gold-ratio: math.div(math.sqrt(5) - 1, 2); // ≈0.618
+$space: 12px;
 
-$font-size: 16px;
-$line-height: 1.375;
-$font-family:
-    'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont,
-    Roboto, Ubuntu, 'Droid Sans', 'Noto Sans', 'Liberation Sans',
-    Helvetica, Arial, sans-serif,
-    'Apple Color Emoji', NotoColorEmoji;
+$titlebar-height: 32px;
+$statusbar-height: 24px;

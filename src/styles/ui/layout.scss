@@ -1,0 +1,122 @@
+@use 'sass:math';
+@import '../variables.scss';
+@import '../typography.scss';
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.titlebar {
+    position: relative;
+    width: 100%;
+    height: $titlebar-height;
+    font-size: 0;
+    background-color: var(--color-canvas-subtle);
+    -webkit-app-region: drag;
+
+    & > .logo {
+        $s: 20px;
+        width: $s;
+        height: $s;
+        margin: math.div($titlebar-height - $s, 2);
+    }
+
+    & > .menu-list {
+        display: inline-block;
+        height: 100%;
+        margin-left: 6;
+        line-height: $titlebar-height + 1;
+        color: var(--color-fg-muted);
+        vertical-align: top;
+        overflow: hidden;
+        user-select: none;
+        -webkit-app-region: no-drag;
+        
+        & > .menu-item {
+            display: inline-block;
+            height: 100%;
+            padding: 0 $padding;
+            font-size: $font-size-small;
+            // min-width: math.div($titlebar-height, $gold-ratio);
+            // box-sizing: border-box;
+            text-align: center;
+            transition: .3s;
+
+            &:hover {
+                background-color: var(--bg-canvas-hover);
+                color: var(--color-fg-default);
+            }
+        }
+
+        & > .title {
+            color: var(--color-fg-default);
+            font-size: $font-size-small;
+        }
+    }
+
+    & > .control-buttons {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 0;
+        -webkit-app-region: no-drag;
+
+        & > .chrome-restore {
+            display: none;
+        }
+        &.max {
+            & > .chrome-restore {
+                display: inline-block;
+            }
+            & > .chrome-maximize {
+                display: none;
+            }
+        }
+
+        & > .control-btn {
+            width: 48px;
+            height: $titlebar-height;
+            padding: 0;
+            border: none;
+            background-color: inherit;
+            transition: .3s;
+
+            &:hover {
+                background-color: var(--bg-canvas-hover);
+            }
+            &.chrome-close:hover {
+                background-color: rgba(232,17,35,.9);
+                color: var(--color-fg-on-emphasis);
+            }
+            & > .mdv-icon {
+                position: relative;
+                top: 1px;
+                pointer-events: none;
+            }
+        }
+
+        & .mdv-icon {
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+.container {
+    flex: 1;
+    padding: $padding;
+    overflow-y: auto;
+}
+
+.statusbar {
+    padding: 0 $padding;
+    height: $statusbar-height;
+    background-color: var(--color-canvas-subtle);
+    font-size: 12px;
+    line-height: $statusbar-height;
+    color: var(--color-fg-muted);
+    user-select: none;
+}

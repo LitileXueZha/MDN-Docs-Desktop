@@ -1,23 +1,33 @@
 /* eslint-env browser */
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, contextBridge } from 'electron';
+import {
+    IPC_CONTEXT_MENU, IPC_CONTROL_BUTTONS, IPC_OPEN_DIALOG, IPC_RENDER,
+} from 'e/constants';
 
 
-window.addEventListener('DOMContentLoaded', () => {
-    const replaceText = (selector, text) => {
-        const element = document.getElementById(selector);
-        if (element) element.innerText = text;
-    };
+const scopeListeners = {};
+const register = (scope, listener) => {
+    scopeListeners[scope] = listener;
+};
+const onMainMessage = (ev, scope, ...args) => scopeListeners[scope]?.(...args);
 
-    for (const type of ['chrome', 'node', 'electron']) {
-        replaceText(`${type}-version`, process.versions[type]);
-    }
-    document.getElementById('open').addEventListener('click', () => {
-        ipcRenderer.send('opendialog', 1);
-    });
-    document.getElementById('open1').addEventListener('click', () => {
-        ipcRenderer.send('opendialog', 2);
-    });
-    document.getElementById('open2').addEventListener('click', () => {
-        ipcRenderer.send('opendialog', 3);
-    });
-});
+const exposedAPIs = {
+    on: register,
+    getVersions() {
+        return process.versions;
+    },
+    openContextMenu() {
+        ipcRenderer.send(IPC_CONTEXT_MENU);
+    },
+    setWindow(action) {
+        ipcRenderer.send(IPC_CONTROL_BUTTONS, action);
+    },
+    openDialog(id) {
+        ipcRenderer.send(IPC_OPEN_DIALOG, id);
+    },
+};
+
+contextBridge.exposeInMainWorld('mdv', exposedAPIs);
+contextBridge.exposeInMainWorld('webviewBridge', exposedAPIs);
+
+ipcRenderer.on(IPC_RENDER, onMainMessage);
