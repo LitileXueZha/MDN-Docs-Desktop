@@ -13,7 +13,6 @@ body {
     position: relative;
     width: 100%;
     height: $titlebar-height;
-    font-size: 0;
     background-color: var(--color-canvas-subtle);
     -webkit-app-region: drag;
 
@@ -25,9 +24,8 @@ body {
     }
 
     & > .menu-list {
-        display: inline-block;
+        display: inline-flex;
         height: 100%;
-        margin-left: 6;
         line-height: $titlebar-height + 1;
         color: var(--color-fg-muted);
         vertical-align: top;
@@ -36,8 +34,6 @@ body {
         -webkit-app-region: no-drag;
         
         & > .menu-item {
-            display: inline-block;
-            height: 100%;
             padding: 0 $padding;
             font-size: $font-size-small;
             // min-width: math.div($titlebar-height, $gold-ratio);
@@ -52,6 +48,7 @@ body {
         }
 
         & > .title {
+            margin-left: 4px;
             color: var(--color-fg-default);
             font-size: $font-size-small;
         }
@@ -61,7 +58,7 @@ body {
         position: absolute;
         top: 0;
         right: 0;
-        font-size: 0;
+        display: flex;
         -webkit-app-region: no-drag;
 
         & > .chrome-restore {
@@ -79,9 +76,10 @@ body {
         & > .control-btn {
             width: 48px;
             height: $titlebar-height;
-            padding: 0;
-            border: none;
+            text-align: center;
+            line-height: $titlebar-height;
             background-color: inherit;
+            color: var(--color-fg-muted);
             transition: .3s;
 
             &:hover {
@@ -94,13 +92,10 @@ body {
             & > .mdv-icon {
                 position: relative;
                 top: 1px;
+                width: 16px;
+                height: 16px;
                 pointer-events: none;
             }
-        }
-
-        & .mdv-icon {
-            width: 16px;
-            height: 16px;
         }
     }
 }
@@ -108,6 +103,7 @@ body {
 .container {
     flex: 1;
     padding: $padding;
+    scroll-behavior: smooth;
     overflow-y: auto;
 }
 

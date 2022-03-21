@@ -6,7 +6,7 @@ import aps from 'e/modules/AppSettings';
 class SettingWindow {
     constructor() {
         this.ID = 'setting';
-        this.URL = path.resolve(__dirname, '../src/setting/index.html');
+        this.URL = 'mdv://internal-files/dist/setting.html';
         this.win = null;
     }
 
@@ -30,9 +30,9 @@ class SettingWindow {
                 enableWebSQL: false,
             },
         });
-        win.menuBarVisible = false;
+        win.setMenuBarVisibility(false);
 
-        await win.loadFile(this.URL);
+        await win.loadURL(this.URL);
         this.win = win;
     }
 }

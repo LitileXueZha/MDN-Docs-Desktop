@@ -7,6 +7,7 @@ import ts from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import virtual from '@rollup/plugin-virtual';
+import image from '@rollup/plugin-image';
 
 
 const IN_PRODUCTION = process.env.NODE_ENV === 'production';
@@ -14,7 +15,7 @@ const DIR_OUTPUT = path.join(__dirname, 'dist');
 
 const ELECTRON = defineConfig({
     external: [
-        /(path|fs|stream|child_process|events|debug)/,
+        /(path|fs|stream|child_process|events|readline|debug)/,
         'electron', // DO NOT USE REGEXP, WILL BREAK DYNAMIC IMPORT
     ],
     input: {
@@ -27,6 +28,7 @@ const ELECTRON = defineConfig({
         chunkFileNames: '[name]-[hash].js',
         format: 'cjs',
         interop: 'auto',
+        sourcemap: 'inline',
     },
     plugins: [
         alias({
@@ -35,6 +37,7 @@ const ELECTRON = defineConfig({
             ],
         }),
         json(),
+        image(),
     ],
 });
 const JS = defineConfig({
@@ -43,7 +46,7 @@ const JS = defineConfig({
     },
     output: {
         dir: DIR_OUTPUT,
-        entryFileNames: '[name].js',
+        entryFileNames: 'js/[name].js',
         format: 'es',
         sourcemap: 'inline',
     },

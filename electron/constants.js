@@ -4,6 +4,9 @@ export const IPC_CONTEXT_MENU = 'ipc:context-menu';
 export const IPC_CONTROL_BUTTONS = 'ipc:control-buttons';
 export const IPC_APPLICATION_MENU = 'ipc:application-menu';
 export const IPC_OPEN_DIALOG = 'ipc:open-dialog';
+export const IPC_READ_CONTENT = 'ipc:read-content';
+export const IPC_READ_PARENT_CONTENT = 'ipc:read-content_parent';
+export const IPC_READ_TRANSLATE_CONTENT = 'ipc:read-content_translations';
 
 // https://primer.style/primitives/colors
 export const COLORS = {

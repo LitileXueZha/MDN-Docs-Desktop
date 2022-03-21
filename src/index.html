@@ -3,47 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src http://localhost:8012">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src http://localhost:8012; img-src * data:">
     <title>MDN Docs Desktop</title>
-    <link rel="shortcut icon" href="../assets/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="../dist/index.css">
+    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/dist/css/index.css">
 </head>
 <body>
     <div class="titlebar">
-        <svg class="logo">
-            <use xlink:href="#mdn-web-docs" />
-        </svg>
-        <div class="menu-list">
-            <div class="menu-item">首页</div>
-            <div class="menu-item">Web 技术</div>
-            <div class="menu-item">教程</div>
-            <div class="menu-item">反馈</div>
-            <div class="menu-item">帮助</div>
-        </div>
+        {{LogoMenu}}
         <div class="control-buttons">
-            <button class="control-btn chrome-minimize" data-id="min">
-                <svg class="mdv-icon">
-                    <use xlink:href="#chrome-minimize" />
-                </svg>
-            </button>
-            <button class="control-btn chrome-maximize" data-id="max">
-                <svg class="mdv-icon">
-                    <use xlink:href="#chrome-maximize" />
-                </svg>
-            </button>
-            <button class="control-btn chrome-restore" data-id="restore">
-                <svg class="mdv-icon">
-                    <use xlink:href="#chrome-restore" />
-                </svg>
-            </button>
-            <button class="control-btn chrome-close" data-id="close">
-                <svg class="mdv-icon">
-                    <use xlink:href="#chrome-close" />
-                </svg>
-            </button>
+            {{Controls}}
         </div>
     </div>
     <main class="container">
+        <div class="home-page">
+            <div class="big-header">
+                {{Logo}}
+                <h1 class="name">MDN Docs Desktop</h1>
+            </div>
+            <div class="search">
+                <svg class="mdv-icon search-icon">
+                    <use xlink:href="#ion-search" />
+                </svg>
+                <input type="search" class="search-index" id="search" placeholder="搜索文档">
+            </div>
+            <div class="intro">
+                <details class="intro-item" open>
+                    <summary class="title">
+                        <svg class="mdv-icon details-marker"><use xlink:href="#ion-caret-forward" /></svg>
+                        开始使用
+                    </summary>
+                    <ol class="usage-steps">
+                        <li>下载&nbsp;<code>content</code></li>
+                        <li>下载&nbsp;<code>translated-content</code>，安装&nbsp;<code>git</code>（可选）</li>
+                        <li>转到&nbsp;<button id="open-setting">设置</button>&nbsp;保存下载路径</li>
+                    </ol>
+                </details>
+                <div class="divider"></div>
+                <details class="intro-item">
+                    <summary class="title">
+                        <svg class="mdv-icon details-marker"><use xlink:href="#ion-caret-forward" /></svg>
+                        更多
+                    </summary>
+                    <div class="more">
+                        <p>
+                            MDN web docs 是一个共建的网络学习平台，多年来一直是查询文档标准的好地方，其内容托管在 Github 仓库&nbsp;
+                            <a href="https://github.com/mdn/content">content</a>
+                            &nbsp;和翻译仓库&nbsp;
+                            <a href="https://github.com/mdn/translated-content">translated-content</a>
+                            &nbsp;上，主要由 Mozilla 进行托管和维护。
+                        </p>
+                        <p>
+                            2022/03/01, Mozilla 发布了&nbsp;
+                            <a href="https://hacks.mozilla.org/2022/03/a-new-year-a-new-mdn/">A new year, a new MDN</a>
+                            ，一个奇怪的 logo，糟糕体验的交互和排版设计，还有随后将会推出的 Plus 版本 😰😨😱
+                        </p>
+                        <p>
+                            MDN Docs Desktop 是一个离线的文档浏览器，依赖于内容仓库，对排版和交互进行了优化。
+                        </p>
+                        <p class="footer hidden">©litilexuezha</p>
+                    </div>
+                </details>
+                <!-- <h4 style="margin: 0;">开始使用</h4> -->
+            </div>
+        </div>
+        <div id="doc-container" class="hidden">
+            <div class="nav">
+                <div class="nav-search">
+                    <svg class="mdv-icon search-icon">
+                        <use xlink:href="#ion-search" />
+                    </svg>        
+                    <input type="search" id="nav-input" placeholder="搜索文档">
+                    <kbd class="search-keybind" title="按下 / 键聚焦">/</kbd>
+                </div>
+                <div class="nav-block">
+                    <ul id="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#1">Web 技术概览</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#2">JavaScript</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#3">abc</a>
+                        </li>
+                        <li class="breadcrumb-item">内存管理</li>
+                    </ul>
+                    <p class="no-translation">💔 此页面没有翻译</p>
+                </div>
+                <div class="nav-lang">
+                    <svg class="mdv-icon lang-icon"><use xlink:href="#ion-globe" /></svg>
+                    <label for="lang-select">语言：</label>
+                    <select class="language" id="lang-select">
+                        <option value="zh-CN">中文</option>
+                        <option value="en-US">English</option>
+                    </select>
+                </div>
+            </div>
+            <div class="doc">
+                <div class="related">
+                    <p class="related-title" title="暂不支持">Related Topics</p>
+                </div>
+                <div class="body" id="doc-body">
+                    <h1 id="doc-title">内存管理</h1>
+                    <!-- <h2>内存管理</h2>
+                    <h3>内存管理</h3>
+                    <h4>内存管理</h4>
+                    <h5>内存管理</h5>
+                    <h6>内存管理</h6> -->
+                    <div id="mdn-content">
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, enim optio neque itaque facere labore, alias ex a modi eos maxime velit reprehenderit ea ullam. Cum suscipit magnam libero totam.</p>
+                        <h2>Jianjie</h2>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo dignissimos corrupti perspiciatis quaerat doloremque placeat itaque vero obcaecati? Placeat culpa minima, exercitationem provident maxime aut mollitia aspernatur recusandae eligendi distinctio.</p>
+                        <h2>ABC</h2>
+                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum ipsum, libero aut cum officiis sed! Ipsum eveniet cum, velit error maxime asperiores nostrum autem sapiente unde recusandae consequuntur voluptatibus fuga!</p>
+                    </div>
+                </div>
+                <ul class="toc">
+                    <li class="toc-item">简介</li>
+                    <li class="toc-item">内存生命周期</li>
+                    <li class="toc-item">垃圾回收</li>
+                    <li class="toc-item">参考</li>
+                </ul>
+            </div>
+        </div>
+        <div class="hidden">
         <h1>Hello World!</h1>
         We are using Node.js <span id="node-version"></span>,
         Chromium <span id="chrome-version"></span>,
@@ -61,26 +145,14 @@
             <input type="radio" name="" id="l2">
             单选框
         </label>
+        </div>
     </main>
     <div class="statusbar">
         状态消息。正在初始化...
     </div>
 
-    <svg data-id="icons" class="hidden" xmlns="http://www.w3.org/2000/svg">
-        <symbol id="mdn-web-docs" viewBox="0 0 500 500">
-            <title>MDN Web Docs</title>
-            <rect x="0" y="0" rx="64" ry="64" width="500" height="500" fill="#2da44e" />
-            <path
-              fill="#ffffff"
-              d="M162.75,294.13H112.19l36.5-38.69H85.84l36.4-38.58H63c1.32-1.64,2-2.59,2.78-3.43,21.06-22.32,41.81-45,63.28-66.86,25.65-26.16,56.79-41.42,93.68-43.31,7.73-.39,15.72,1.29,23.37,3a212.12,212.12,0,0,1,25.11,7.47c10.16,3.61,20.3,3.89,30.75,1.79,7.72-1.55,15.51-1.54,23,1.28,11.85,4.44,19.44,12.74,21.38,25.42,1.63,10.63,7,18.43,16.69,22.8,12.24,5.54,24.72,10.56,37.13,15.74,6.66,2.77,13.42,5.3,20.07,8.09,9,3.8,14.83,10,15,20.43.19,11.06,1.3,22.18.52,33.17S428.49,262.66,423,272c-2.29,3.9-6.41,4.88-10.76,5.35a20,20,0,0,0-7.33,2.32c-4.25,2.34-8.32,5-12.34,7.74-8,5.4-16.43,5.71-25.47,3-8.63-2.55-17.33-5.41-26.2-6.41a86.7,86.7,0,0,0-26.43.68c-19.39,3.88-29.66,17.77-32.6,36.21-3.11,19.56-4.32,39.43-6,59.2-.91,10.61-1.08,21.29-1.61,32.6-4-1.1-7.71-2-11.33-3.15C219,395.43,181.4,371,148.69,338.67c-1.86-1.84-1.75-3.32-.92-5.44C152.73,320.45,157.59,307.64,162.75,294.13Z"
-            />
-        </symbol>
-        <symbol id="chrome-minimize" viewBox="0 0 16 16"><path fill="currentColor" d="M14 8v1H3V8h11z"/></symbol>
-        <symbol id="chrome-maximize" viewBox="0 0 16 16"><path fill="currentColor" d="M3 3v10h10V3H3zm9 9H4V4h8v8z"/></symbol>
-        <symbol id="chrome-restore" viewBox="0 0 16 16"><g fill="currentColor"><path d="M3 5v9h9V5H3zm8 8H4V6h7v7z"/><path fill-rule="evenodd" d="M5 5h1V4h7v7h-1v1h2V3H5v2z" clip-rule="evenodd"/></g></symbol>
-        <symbol id="chrome-close" viewBox="0 0 16 16"><path fill="currentColor" fill-rule="evenodd" d="m7.116 8l-4.558 4.558l.884.884L8 8.884l4.558 4.558l.884-.884L8.884 8l4.558-4.558l-.884-.884L8 7.116L3.442 2.558l-.884.884L7.116 8z" clip-rule="evenodd"/></symbol>
-    </svg>
+    {{SVGIcons}}
 
-    <script src="../dist/index.js"></script>
+    <script src="/dist/js/index.js"></script>
 </body>
 </html>

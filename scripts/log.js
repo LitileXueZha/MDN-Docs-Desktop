@@ -6,8 +6,6 @@ const util = require('util');
  * Usage:
  * ```js
  * log(100, '%c costs %c', 'build', 11);
- * log(Error);
- * log.start = Date.now();
  * log('%c', 'colorful');
  * ```
  *
@@ -19,24 +17,26 @@ function log(ts, msg, ...args) {
     if (typeof ts !== 'number') {
         args.unshift(msg);
         msg = ts;
-        ts = log.start ? Date.now() - log.start : 0;
-        log.start = undefined;
+        ts = 0;
     }
-    if (typeof msg === 'object') {
-        console.error(msg);
-        return;
-    }
-    const tsFormat = ts < 1000 ? `${ts}ms` : `${Math.round(ts / 1000)}s`;
     const { isTTY } = process.stdout;
     let i = 0;
-    msg = msg.replaceAll('%c', (s) => {
+    msg = msg.replaceAll('%c', () => {
+        const arg = args[i++];
         if (isTTY) {
-            return util.inspect(args[i++], { colors: true });
+            return util.inspect(arg, { colors: true });
         }
-        return s;
+        return arg;
     });
-    // magenta
-    process.stdout.write(`  ${msg} \x1b[35m+${tsFormat}\x1b[0m\n`);
+    let tsMessage = '';
+    if (ts > 0) {
+        tsMessage = ts < 1000 ? `+${ts}ms` : `+${Math.round(ts / 1000)}s`;
+        if (isTTY) {
+            // magenta
+            tsMessage = `\x1b[35m${tsMessage}\x1b[0m`;
+        }
+    }
+    process.stdout.write(`  ${msg} ${tsMessage}\n`);
 }
 
 module.exports = log;

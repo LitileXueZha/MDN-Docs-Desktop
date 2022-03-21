@@ -1,12 +1,12 @@
 import path from 'path';
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, shell } from 'electron';
 import { COLORS, IPC_RENDER } from 'e/constants';
 import aps from 'e/modules/AppSettings';
 
 class MainWindow {
     constructor() {
         this.ID = 'main';
-        this.URL = path.resolve(__dirname, '../src/index.html');
+        this.URL = 'mdv://internal-files/dist/index.html';
         this.win = null;
     }
 
@@ -24,7 +24,6 @@ class MainWindow {
             minWidth: 360,
             frame: false,
             useContentSize: true,
-            titleBarStyle: 'hidden',
             backgroundColor: background,
             // titleBarOverlay: true,
             // titleBarOverlay: {
@@ -40,10 +39,11 @@ class MainWindow {
             },
         });
 
-        win.on('maximize', this._onMaximize);
-        win.on('unmaximize', this._onUnmaximize);
         // await win.loadURL('mdv://internal-files/index.html');
         await win.loadURL(this.URL);
+        win.on('maximize', this._onMaximize);
+        win.on('unmaximize', this._onUnmaximize);
+        win.webContents.on('will-navigate', this._onWillNavigate);
         this.win = win;
     }
 
@@ -53,6 +53,24 @@ class MainWindow {
 
     _onUnmaximize = (e) => {
         this.win.webContents.send(IPC_RENDER, 'win-unmax');
+    };
+
+    _onWillNavigate = (ev, url) => {
+        if (url.startsWith('http')) {
+            shell.openExternal(url);
+            ev.preventDefault();
+            return;
+        }
+        if (url.startsWith('mdv')) {
+            const { pathname, search } = new URL(url);
+
+            // Enpower live reload
+            if (search.indexOf('reload') > -1) {
+                return;
+            }
+            this.win.webContents.executeJavaScript(`history.pushState({},"","${pathname}");dispatchEvent(new Event('popstate'))`);
+            ev.preventDefault();
+        }
     };
 }
 

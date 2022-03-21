@@ -1,5 +1,281 @@
+@use 'sass:math';
 @import './styles/index.scss';
 @import './styles/ui/layout.scss';
+@import './styles/ui/content.scss';
 
 
+.big-header {
+    text-align: center;
 
+    .logo {
+        margin-top: $margin * 4;
+        width: 80px;
+        height: 80px;
+    }
+    .name {
+        margin: 0;
+    }
+}
+
+.search {
+    position: relative;
+    margin: $margin*5 auto;
+    width: 540px;
+    box-sizing: border-box;
+
+    .search-icon {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+    }
+
+    .search-index {
+        width: 100%;
+        padding-left: 40px;
+        border-radius: 4px;
+        box-shadow: var(--color-shadow-medium);
+
+        &:focus {
+            box-shadow: var(--color-shadow-large);
+        }
+    }
+}
+
+.intro {
+    margin: $margin*8 auto 0 auto;
+    max-width: 540px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border-subtle);
+    overflow: hidden;
+
+    .intro-item {
+        &:not(:last-of-type) {
+            border-bottom: 1px solid var(--color-neutral-subtle);
+        }
+
+        & > .title {
+            padding: $padding 10px;
+            list-style: none;
+            cursor: pointer;
+            transition: .1s;
+        }
+
+        .details-marker {
+            margin-right: 10px;
+            vertical-align: text-bottom;
+            transition: .1s;
+        }
+
+        &[open] {
+            .title {
+                background-color: var(--color-neutral-subtle);
+            }
+            .details-marker {
+                transform: rotateZ(90deg);
+            }
+        }
+    }
+
+    .usage-steps {
+        margin: 0;
+        padding: $padding $padding $padding 40px;
+
+        & > li {
+            margin-bottom: 4px;
+        }
+    }
+    .more {
+        padding: 0 1.5em $margin 1.5em;
+    }
+
+    #open-setting {
+        padding: 0.2em 0.4em;
+        font-size: $font-size-small;
+        border: none;
+        border-radius: 4px;
+        color: var(--color-fg-on-emphasis);
+        background-color: var(--color-accent-emphasis);
+        box-shadow: var(--color-shadow-medium);
+        cursor: pointer;
+    }
+
+    a {
+        color: var(--color-accent-fg);
+    }
+}
+
+.footer {
+    color: var(--color-fg-subtle);
+    text-align: center;
+}
+
+#doc-container {
+    margin-top: $margin;
+
+    .nav {
+        display: flex;
+        font-size: $font-size-small;
+
+        .nav-search {
+            flex: 1.25;
+            position: relative;
+            height: 36px;
+
+            .search-icon {
+                position: absolute;
+                left: 6px;
+                top: 8px;
+                color: var(--color-neutral-emphasis);
+                z-index: 3;
+            }
+
+            .search-keybind {
+                position: absolute;
+                right: 6px;
+                top: 6px;
+                padding: 2px 8px;
+                border-radius: 4px;
+                line-height: 20px;
+                background-color: var(--color-neutral-muted);
+                box-shadow: var(--color-shadow-small);
+                z-index: 3;
+            }
+            
+            #nav-input {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 36px;
+                padding: 8px 10px 8px 32px;
+                background-color: var(--color-canvas-overlay);
+                box-shadow: var(--color-shadow-small);
+                z-index: 2;
+
+                &:focus {
+                    width: 161.8%;
+                    box-shadow: var(--color-shadow-large);
+
+                    & + .search-keybind {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        .nav-block {
+            flex: 3;
+            margin: 0 $margin*2;
+        }
+
+        #breadcrumb {
+            margin: 4px 0 0 0;
+            padding: 0;
+            list-style: none;
+
+            & > .breadcrumb-item {
+                display: inline-block;
+                margin: 0 0 4px 0;
+                
+                & > a, &:last-of-type {
+                    display: inline-block;
+                    padding: 4px $padding;
+                    background-color: var(--color-accent-subtle);
+                    border-radius: 50px;
+                }
+                & > a {
+                    text-decoration: none;
+                    color: var(--color-accent-fg);
+                }
+
+                &:not(:last-of-type)::after {
+                    content: '>';
+                    position: relative;
+                    top: -1px;
+                    margin: 0 4px;
+                }
+            }
+        }
+
+        .no-translation {
+            margin: $margin 0 0 0;
+            padding: 8px $padding;
+            background-color: var(--color-danger-subtle);
+            border-radius: 6px;
+        }
+
+        .nav-lang {
+            flex: 1;
+            text-align: right;
+            margin-top: 6px;
+
+            .lang-icon {
+                position: relative;
+                top: -2px;
+                color: var(--color-fg-default);
+                vertical-align: middle;
+            }
+
+            .language {
+                padding: 2px 6px;
+                width: 100px;
+                font: inherit;
+                border: none;
+                border-radius: 2px;
+                background-color: var(--bg-select);
+
+                & > option {
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+
+    .doc {
+        display: flex;
+        margin-top: $margin*2;
+
+        .related {
+            flex: 1.25;
+
+            & > .related-title {
+                margin-top: 3.135rem;
+                font-weight: 500;
+            }
+        }
+
+        .body {
+            flex: 3;
+            margin: 0 $margin*2;
+            overflow: hidden;
+
+            @include mixContent;
+        }
+
+        .toc {
+            position: sticky;
+            top: 0;
+            flex: 1;
+            align-self: flex-start !important;
+            margin: 3rem 0 0 0;
+            padding: 4px 0;
+            font-size: $font-size-small;
+            line-height: 1.15;
+            border-radius: 4px;
+            list-style: none;
+            box-sizing: border-box;
+            box-shadow: var(--color-shadow-large);
+
+            & > .toc-item {
+                padding: $padding*$gold-ratio $padding;
+                margin: 0;
+                transition: .3s;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--color-accent-subtle);
+                }
+            }
+        }
+    }
+}

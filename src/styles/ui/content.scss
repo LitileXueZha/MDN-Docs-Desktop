@@ -1,0 +1,52 @@
+@import '../variables.scss';
+@import '../typography.scss';
+
+@mixin mixContent {
+
+h6 { font-size: 0.75rem; }
+h5 { font-size: 1rem; }
+h4 { font-size: 1.25rem; }
+h3 { font-size: 1.5rem; }
+h2 { font-size: 1.75rem; }
+h1 { font-size: 2rem; }
+h1, h2, h3, h4, h5, h6 {
+    margin: 1em 0 0.618em 0;
+}
+p {
+    margin: 0.618em 0;
+}
+
+ol, ul {
+    padding-left: 1.618em;
+
+    & > li {
+        margin-bottom: 0.25em;
+    }
+}
+dt {
+    margin-top: 1em;
+}
+dd {
+    margin-left: 1.618em;
+}
+
+a {
+    color: var(--color-accent-fg);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &[href^="http"] {
+        color: var(--color-danger-fg);
+        text-decoration: underline;
+    }
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+}

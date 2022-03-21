@@ -9,6 +9,8 @@ import mainWindow from 'e/windows/main';
 import setting from 'e/windows/setting';
 import { IPC_CONTEXT_MENU, IPC_OPEN_DIALOG } from 'e/constants';
 import aps from 'e/modules/AppSettings';
+import mdv from 'e/modules/SchemeMDV';
+import locales from 'e/modules/Locales';
 import { version } from '../package.json';
 
 process.env.DEBUG = '*';
@@ -41,54 +43,22 @@ export async function startup() {
         },
     ]);
 
-    protocol.registerSchemesAsPrivileged([
-        {
-            scheme: 'mdv',
-            privileges: {
-                secure: true, standard: true, supportFetchAPI: true, corsEnabled: true,
-            },
-        },
-    ]);
+    protocol.registerSchemesAsPrivileged([mdv.SCHEME]);
     await app.whenReady();
-    protocol.registerBufferProtocol('mdv', async (req, callback) => {
-        const id = req.url.substring('mdv://internal-files/'.length);
-        log(id, id.endsWith('.html'));
-        if (id.endsWith('.html')) {
-            const { minify } = require('html-minifier-terser');
-            const html = await fs.readFile(path.resolve(__dirname, '../index.html'), 'utf-8');
-            const minifyHtml = await minify(html, {
-                collapseWhitespace: true,
-                keepClosingSlash: true,
-                removeComments: true,
-                removeRedundantAttributes: true,
-                removeScriptTypeAttributes: true,
-                removeStyleLinkTypeAttributes: true,
-                useShortDoctype: true,
-            });
-            callback({ mimeType: 'text/html', data: Buffer.from(minifyHtml) });
-            return;
-        }
-        let mimeType = 'text/plain';
-        if (id.endsWith('.css')) {
-            mimeType = 'text/css';
-        } else if (id.endsWith('.js')) {
-            mimeType = 'application/javascript';
-        }
-        const data = await fs.readFile(path.resolve(__dirname, '..', id));
-        callback({ mimeType, data });
-    });
-    // session.defaultSession.webRequest.onBeforeRequest({urls:['*://*/*']}, (details, callback) => {
-    //     console.log(details.url);
-    //     callback({});
-    // });
+    mdv.register();
     await aps.load();
     await mainWindow.startup();
-    const [ctxMenu, ctrlButtons] = await Promise.all([
+    await locales.detect();
+    const [ctxMenu, ctrlButtons, menus, cnProvider] = await Promise.all([
         import('e/modules/ContextMenu'),
         import('e/modules/ControlButtons'),
+        import('e/modules/ApplicationMenu'),
+        import('e/modules/ContentProvider'),
     ]);
     ctxMenu.default.start();
     ctrlButtons.default.start();
+    menus.default.start();
+    cnProvider.default.start();
 
     const versions = Object.keys(process.versions).map((k) => `${k}: ${process.versions[k]}`).join('\n');
     ipcMain.on(IPC_OPEN_DIALOG, (ev, type) => {

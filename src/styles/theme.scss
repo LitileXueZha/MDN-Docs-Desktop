@@ -4,9 +4,13 @@
 // custom variables here
 @mixin colors-light {
     --bg-canvas-hover: var(--color-scale-gray-2);
+    --fg-second: var(--color-scale-gray-3);
+    --bg-select: var(--color-scale-yellow-0);
 }
 @mixin colors-dark {
     --bg-canvas-hover: var(--color-scale-gray-6);
+    --fg-second: var(--color-scale-gray-6);
+    --bg-select: var(--color-scale-yellow-8);
 }
 
 :root {

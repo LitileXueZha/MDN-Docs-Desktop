@@ -13,6 +13,7 @@ interface IMDV {
     openContextMenu(): void;
     setWindow(action: string): void;
     openDialog(id: number): void;
+    openMenu(menuKey: string): void;
     on(scope: scopes, listener: Function): void;
 }
 
