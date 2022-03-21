@@ -2,6 +2,17 @@
 
 Offline MDN docs viewer.
 
+![Screenshot Index](docs/screenshot-index.png)
+
+## About
+
+MDN web docs 是一个共建的网络学习平台，多年来一直是查询文档标准的好地方，其内容托管在 Github 仓库 [content](https://github.com/mdn/content) 和翻译仓库 [translated-content](https://github.com/mdn/translated-content) 上，主要由 Mozilla 进行托管和维护。
+
+2022/03/01, Mozilla 发布了 [A new year, a new MDN](https://hacks.mozilla.org/2022/03/a-new-year-a-new-mdn/)，一个奇怪的 logo，糟糕体验的交互和排版设计，还有随后将会推出的 Plus 版本 😰😨😱
+
+MDN Docs Desktop 是一个离线的文档浏览器，依赖于内容仓库，对排版和交互进行了优化。
+
+
 ## Customization
 
 ```shell
