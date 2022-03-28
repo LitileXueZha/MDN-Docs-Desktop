@@ -73,7 +73,7 @@
                     <svg class="mdv-icon search-icon">
                         <use xlink:href="#ion-search" />
                     </svg>        
-                    <input type="search" id="nav-input" placeholder="搜索文档">
+                    <input type="text" id="nav-input" placeholder="搜索文档">
                     <kbd class="search-keybind" title="按下 / 键聚焦">/</kbd>
                 </div>
                 <div class="nav-block">
@@ -89,15 +89,21 @@
                         </li>
                         <li class="breadcrumb-item">内存管理</li>
                     </ul>
-                    <p class="no-translation">💔 此页面没有翻译</p>
+                    <p id="no-translation" class="hidden">💔 此页面没有翻译</p>
                 </div>
                 <div class="nav-lang">
-                    <svg class="mdv-icon lang-icon"><use xlink:href="#ion-globe" /></svg>
-                    <label for="lang-select">语言：</label>
-                    <select class="language" id="lang-select">
-                        <option value="zh-CN">中文</option>
-                        <option value="en-US">English</option>
-                    </select>
+                    <!-- <svg class="mdv-icon lang-icon"><use xlink:href="#ion-globe" /></svg> -->
+                    <label for="lang-select">
+                        <i class="mdv-icon">🌏</i>
+                        &nbsp;语言：
+                    </label>
+                    <div class="mdv-select">
+                        <select class="language" id="lang-select">
+                            <option value="zh-CN">中文</option>
+                            <option value="en-US">English</option>
+                        </select>
+                        <svg class="mdv-icon"><use xlink:href="#ion-chevron-down" /></svg>
+                    </div>
                 </div>
             </div>
             <div class="doc">
@@ -119,40 +125,32 @@
                         <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum ipsum, libero aut cum officiis sed! Ipsum eveniet cum, velit error maxime asperiores nostrum autem sapiente unde recusandae consequuntur voluptatibus fuga!</p>
                     </div>
                 </div>
-                <ul class="toc">
-                    <li class="toc-item">简介</li>
-                    <li class="toc-item">内存生命周期</li>
-                    <li class="toc-item">垃圾回收</li>
-                    <li class="toc-item">参考</li>
-                </ul>
+                <div class="sidebar">
+                    <ol id="toc">
+                        <li class="toc-item"><a>简介</a></li>
+                        <li class="toc-item"><a>内存生命周期</a></li>
+                        <li class="toc-item"><a>垃圾回收</a></li>
+                        <li class="toc-item"><a>参考</a></li>
+                    </ol>
+                    <div id="scroll-top" style="display: none;" role="button">
+                        <svg class="mdv-icon"><use xlink:href="#akar-top"></svg>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="hidden">
-        <h1>Hello World!</h1>
-        We are using Node.js <span id="node-version"></span>,
-        Chromium <span id="chrome-version"></span>,
-        and Electron <span id="electron-version"></span>.
-        <br>
-        <a href="#/zh-CN/values">zh-CN values</a>
-        <button id="open">打开弹窗</button>
-        <button id="open1">关于</button>
-        <button id="open2">表情面板</button>
-        <label for="l1">
-            <input type="checkbox" name="" id="l1">
-            😀 复选框
-        </label>
-        <label for="l2">
-            <input type="radio" name="" id="l2">
-            单选框
-        </label>
-        </div>
+        <div id="sct-observe-helper"></div>
     </main>
     <div class="statusbar">
-        状态消息。正在初始化...
+        <div class="message">
+            <svg class="mdv-icon"><use xlink:href="#eos-loading" /></svg>
+            <span>状态消息。正在初始化...</span>
+        </div>
+        <div class="custom"></div>
+        <div class="app"></div>
     </div>
 
     {{SVGIcons}}
 
-    <script src="/dist/js/index.js"></script>
+    <script src="/dist/js/index.js" type="module"></script>
 </body>
 </html>

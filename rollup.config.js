@@ -15,7 +15,7 @@ const DIR_OUTPUT = path.join(__dirname, 'dist');
 
 const ELECTRON = defineConfig({
     external: [
-        /(path|fs|stream|child_process|events|readline|debug)/,
+        /(path|fs|stream|child_process|events|readline|worker_threads|debug)/,
         'electron', // DO NOT USE REGEXP, WILL BREAK DYNAMIC IMPORT
     ],
     input: {
@@ -36,6 +36,7 @@ const ELECTRON = defineConfig({
                 { find: 'e', replacement: path.resolve(__dirname, 'electron') },
             ],
         }),
+        nodeResolve(),
         json(),
         image(),
     ],
@@ -43,10 +44,12 @@ const ELECTRON = defineConfig({
 const JS = defineConfig({
     input: {
         index: 'src/index.ts',
+        'web-worker': 'src/web-worker.ts',
     },
     output: {
         dir: DIR_OUTPUT,
         entryFileNames: 'js/[name].js',
+        chunkFileNames: 'js/[name]-[hash].js',
         format: 'es',
         sourcemap: 'inline',
     },
@@ -62,6 +65,10 @@ const JS = defineConfig({
     onwarn(warnings, warn) {
         if (warnings.code === 'UNRESOLVED_IMPORT') {
             // Modules are resolved by typescript
+            return;
+        }
+        if (warnings.code === 'EVAL') {
+            // eval() is currently necessary for Macros
             return;
         }
         warn(warnings);

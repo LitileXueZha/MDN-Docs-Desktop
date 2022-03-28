@@ -1,6 +1,7 @@
 import {
     ipcMain, Menu, BrowserWindow, app, nativeTheme,
     nativeImage,
+    shell,
 } from 'electron';
 import path from 'path';
 import { IPC_CONTEXT_MENU } from 'e/constants';
@@ -36,7 +37,7 @@ class ContextMenu {
             },
             { label: '检查', role: 'toggleDevTools', accelerator: 'F12' },
             { type: 'separator' },
-            { label: '在 MDN 上查看', icon: this.icon },
+            { label: '在 MDN 上查看', icon: this.icon, click: this._onMDNForward },
             { label: '网页内查找', accelerator: 'CmdOrCtrl+F' },
             { label: '重新启动', click: this._onRelaunch },
             { label: '退出', role: 'quit' },
@@ -66,6 +67,13 @@ class ContextMenu {
             return;
         }
         nativeTheme.themeSource = 'light';
+    };
+
+    _onMDNForward = (ev, win) => {
+        const MDN = 'https://developer.mozilla.org';
+        const url = win.webContents.getURL();
+        const { pathname, hash } = new URL(url);
+        shell.openExternal(`${MDN}${pathname}${hash}`);
     };
 
     _onRelaunch = (e) => {

@@ -102,12 +102,35 @@ body {
 
 .container {
     flex: 1;
+    position: relative;
     padding: $padding;
     scroll-behavior: smooth;
     overflow-y: auto;
+
+    #sct-observe-helper {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        z-index: -1;
+    }
+}
+
+#scroll-top {
+    position: fixed;
+    bottom: 70px;
+    margin-right: -32px;
+    right: calc((100% - $margin*4) / (1 + 1.25 + 3));
+    padding: 14px;
+    font-size: 0;
+    background: var(--color-canvas-default);
+    border-radius: 10px;
+    box-shadow: var(--shadow-scroll-top);
+    z-index: 9;
+    cursor: pointer;
 }
 
 .statusbar {
+    display: flex;
     padding: 0 $padding;
     height: $statusbar-height;
     background-color: var(--color-canvas-subtle);
@@ -115,4 +138,68 @@ body {
     line-height: $statusbar-height;
     color: var(--color-fg-muted);
     user-select: none;
+
+    & > .message {
+        flex: 1;
+        display: flex;
+        align-items: center;
+
+        & > .mdv-icon {
+            margin-right: 4px;
+            width: 16px;
+            height: 16px;
+        }
+    }
+}
+
+.search-box {
+    position: absolute;
+    padding: 8px 0;
+    background-color: var(--color-canvas-default);
+    box-shadow: var(--color-shadow-extra-large);
+    // border: 1px solid var(--color-border-default);
+    border-top-width: 0;
+    z-index: 9;
+    box-sizing: border-box;
+
+    & > .loading,
+    & > .no-result {
+        margin: $margin*2 0;
+        font-size: $font-size-small;
+        color: var(--fg-second);
+        text-align: center;
+    }
+
+    .result-item {
+        display: block;
+        margin: 1px;
+        color: var(--color-fg-subtle);
+        text-decoration: none;
+        overflow: hidden;
+        transition: .3s;
+
+        &:hover, &:focus,
+        &.highlight {
+            background-color: var(--color-neutral-subtle);
+        }
+
+        & > .title {
+            color: var(--color-fg-default);
+            word-break: break-word;
+
+            & > mark {
+                color: inherit;
+                background-color: transparent;
+                font-weight: bold;
+            }
+        }
+
+        & > .url {
+            margin-top: .15em;
+            line-height: 1;
+            font-size: $font-size-small;
+            font-weight: lighter;
+            word-break: break-all;
+        }
+    }
 }

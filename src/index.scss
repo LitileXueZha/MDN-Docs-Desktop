@@ -43,7 +43,7 @@
 
 .intro {
     margin: $margin*8 auto 0 auto;
-    max-width: 540px;
+    max-width: 540px - 2;
     border-radius: 6px;
     border: 1px solid var(--color-border-subtle);
     overflow: hidden;
@@ -125,7 +125,6 @@
                 position: absolute;
                 left: 6px;
                 top: 8px;
-                color: var(--color-neutral-emphasis);
                 z-index: 3;
             }
 
@@ -135,8 +134,7 @@
                 top: 6px;
                 padding: 2px 8px;
                 border-radius: 4px;
-                line-height: 20px;
-                background-color: var(--color-neutral-muted);
+                background: var(--kbd-gradient);
                 box-shadow: var(--color-shadow-small);
                 z-index: 3;
             }
@@ -147,9 +145,8 @@
                 top: 0;
                 width: 100%;
                 height: 36px;
-                padding: 8px 10px 8px 32px;
-                background-color: var(--color-canvas-overlay);
-                box-shadow: var(--color-shadow-small);
+                padding: 8px 32px;
+                box-shadow: var(--color-shadow-medium);
                 z-index: 2;
 
                 &:focus {
@@ -197,7 +194,7 @@
             }
         }
 
-        .no-translation {
+        #no-translation {
             margin: $margin 0 0 0;
             padding: 8px $padding;
             background-color: var(--color-danger-subtle);
@@ -207,7 +204,7 @@
         .nav-lang {
             flex: 1;
             text-align: right;
-            margin-top: 6px;
+            margin-top: 4px;
 
             .lang-icon {
                 position: relative;
@@ -217,12 +214,7 @@
             }
 
             .language {
-                padding: 2px 6px;
                 width: 100px;
-                font: inherit;
-                border: none;
-                border-radius: 2px;
-                background-color: var(--bg-select);
 
                 & > option {
                     font-size: 16px;
@@ -246,19 +238,25 @@
 
         .body {
             flex: 3;
+            position: relative;
             margin: 0 $margin*2;
             overflow: hidden;
 
             @include mixContent;
         }
 
-        .toc {
-            position: sticky;
-            top: 0;
+        #doc-title {
+            word-break: break-word;
+        }
+
+        .sidebar {
             flex: 1;
-            align-self: flex-start !important;
+        }
+        #toc {
+            position: sticky;
+            top: $margin*3;
             margin: 3rem 0 0 0;
-            padding: 4px 0;
+            padding: 8px 0;
             font-size: $font-size-small;
             line-height: 1.15;
             border-radius: 4px;
@@ -267,13 +265,27 @@
             box-shadow: var(--color-shadow-large);
 
             & > .toc-item {
-                padding: $padding*$gold-ratio $padding;
                 margin: 0;
-                transition: .3s;
-                cursor: pointer;
+                counter-increment: num;
+                
+                & > a {
+                    display: block;
+                    padding: 8px 16px 8px calc(10% + 4px);
+                    color: var(--color-fg-default);
+                    text-decoration: none;
+                    transition: .3s;
 
-                &:hover {
-                    background-color: var(--color-accent-subtle);
+                    &:hover {
+                        color: var(--color-accent-fg);
+                        background-color: var(--color-neutral-subtle);
+                    }
+
+                    &::before {
+                        content: counter(num)".";
+                        position: absolute;
+                        right: 90%;
+                        color: var(--fg-second);
+                    }
                 }
             }
         }

@@ -62,12 +62,8 @@ class MainWindow {
             return;
         }
         if (url.startsWith('mdv')) {
-            const { pathname, search } = new URL(url);
+            const { pathname } = new URL(url);
 
-            // Enpower live reload
-            if (search.indexOf('reload') > -1) {
-                return;
-            }
             this.win.webContents.executeJavaScript(`history.pushState({},"","${pathname}");dispatchEvent(new Event('popstate'))`);
             ev.preventDefault();
         }

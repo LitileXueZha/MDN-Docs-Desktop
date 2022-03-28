@@ -27,6 +27,7 @@
         "no-underscore-dangle": "off",
         "no-unsafe-optional-chaining": "off",
         "no-multiple-empty-lines": ["error", {"max": 2}],
+        "lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
         "import/no-extraneous-dependencies": "off"
     }
 }

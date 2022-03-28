@@ -7,7 +7,7 @@ import {
 } from 'electron';
 import mainWindow from 'e/windows/main';
 import setting from 'e/windows/setting';
-import { IPC_CONTEXT_MENU, IPC_OPEN_DIALOG } from 'e/constants';
+import { IPC_CONTEXT_MENU, IPC_OPEN_DIALOG, IPC_RELOAD } from 'e/constants';
 import aps from 'e/modules/AppSettings';
 import mdv from 'e/modules/SchemeMDV';
 import locales from 'e/modules/Locales';
@@ -49,16 +49,18 @@ export async function startup() {
     await aps.load();
     await mainWindow.startup();
     await locales.detect();
-    const [ctxMenu, ctrlButtons, menus, cnProvider] = await Promise.all([
+    const [ctxMenu, ctrlButtons, menus, cnProvider, sIndex] = await Promise.all([
         import('e/modules/ContextMenu'),
         import('e/modules/ControlButtons'),
         import('e/modules/ApplicationMenu'),
         import('e/modules/ContentProvider'),
+        import('e/modules/SearchIndex'),
     ]);
     ctxMenu.default.start();
     ctrlButtons.default.start();
     menus.default.start();
     cnProvider.default.start();
+    sIndex.default.start();
 
     const versions = Object.keys(process.versions).map((k) => `${k}: ${process.versions[k]}`).join('\n');
     ipcMain.on(IPC_OPEN_DIALOG, (ev, type) => {
@@ -84,5 +86,8 @@ export async function startup() {
             // createWindow(win, true);
             setting.create();
         }
+    });
+    ipcMain.on(IPC_RELOAD, (ev) => {
+        ev.sender.reloadIgnoringCache();
     });
 }

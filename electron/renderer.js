@@ -2,7 +2,16 @@
 import { ipcRenderer, contextBridge } from 'electron';
 import {
     IPC_APPLICATION_MENU,
-    IPC_CONTEXT_MENU, IPC_CONTROL_BUTTONS, IPC_OPEN_DIALOG, IPC_READ_CONTENT, IPC_READ_PARENT_CONTENT, IPC_READ_TRANSLATE_CONTENT, IPC_RENDER,
+    IPC_CONTEXT_MENU,
+    IPC_CONTROL_BUTTONS,
+    IPC_CONTROL_BUTTONS_WINDOW,
+    IPC_OPEN_DIALOG,
+    IPC_READ_CONTENT,
+    IPC_READ_PARENT_CONTENT,
+    IPC_READ_SEARCH_INDEX,
+    IPC_READ_TRANSLATE_CONTENT,
+    IPC_RELOAD,
+    IPC_RENDER,
 } from 'e/constants';
 
 
@@ -23,6 +32,9 @@ const exposedAPIs = {
     setWindow(action) {
         ipcRenderer.send(IPC_CONTROL_BUTTONS, action);
     },
+    getWindow() {
+        return ipcRenderer.invoke(IPC_CONTROL_BUTTONS_WINDOW);
+    },
     openDialog(id) {
         ipcRenderer.send(IPC_OPEN_DIALOG, id);
     },
@@ -40,6 +52,12 @@ const exposedAPIs = {
     },
     getOtherTranslations(slug) {
         return ipcRenderer.invoke(IPC_READ_TRANSLATE_CONTENT, slug);
+    },
+    getSearchIndex(locale) {
+        return ipcRenderer.invoke(IPC_READ_SEARCH_INDEX, locale);
+    },
+    reload() {
+        ipcRenderer.send(IPC_RELOAD);
     },
 };
 

@@ -53,6 +53,7 @@
   "dependencies": {
     "@primer/primitives": "^7.5.0",
     "front-matter": "^4.0.2",
+    "highlight.js": "^11.5.0",
     "marked": "^4.0.12"
   },
   "config": {

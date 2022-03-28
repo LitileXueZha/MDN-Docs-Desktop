@@ -10,7 +10,7 @@ sse.addEventListener('message', (ev) => {
     const data = JSON.parse(ev.data);
     if (data.reload) {
         // window.location.reload();
-        window.location.href = `${window.location.pathname}?reload`;
+        mdv.reload();
     }
 });
 window.addEventListener('unload', () => sse.close());

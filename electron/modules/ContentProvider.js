@@ -12,6 +12,12 @@ const REG_REDIRECT_SEPARATOR = /\t+/;
 const INDEX_HTML = 'index.html';
 const INDEX_MARKDOWN = 'index.md';
 const REDIRECT_FILE = '_redirects.txt';
+const SLUG_FOLDERS = {
+    '*': '_star_',
+    ':': '_colon_',
+    '::': '_doublecolon_',
+    '?': '_question_',
+};
 
 class ContentProvider {
     constructor() {
@@ -69,7 +75,7 @@ class ContentProvider {
      *     -- index.{md|html}
      * @param {string} url eg: /zh-CN/docs/web/HTML
      */
-    async _findContentByURL(url) {
+    async _findContentByURL(url, useFallback = true) {
         const matches = url.match(REG_CONTENT_URL);
         // Invalid url
         if (!matches) return;
@@ -87,14 +93,15 @@ class ContentProvider {
         }
 
         const { dir, native } = localeValues;
-        let folder = path.join(dir, slug);
+        const slugPath = this._slugToFolder(slug);
+        let folder = path.join(dir, slugPath);
 
         await fs.access(folder).catch(() => {
             folder = false;
         });
         if (!folder) {
             // Fallback
-            if (locale !== locales.DEFAULT) {
+            if (useFallback && locale !== locales.DEFAULT) {
                 const fallbackURL = url.replace(locale, locales.DEFAULT);
                 return this._findContentByURL(fallbackURL);
             }
@@ -104,17 +111,23 @@ class ContentProvider {
         }
 
         let isMarkdown = true;
-        const raw = await fs.readFile(path.join(folder, INDEX_MARKDOWN), 'utf-8').catch(() => {
+        let filePath = path.join(folder, INDEX_MARKDOWN);
+        const raw = await fs.readFile(filePath, 'utf-8').catch(() => {
             isMarkdown = false;
-            return fs.readFile(path.join(folder, INDEX_HTML), 'utf-8');
+            filePath = path.join(folder, INDEX_HTML);
+            return fs.readFile(filePath, 'utf-8');
         }).catch(() => {
             // Not found index file
         });
 
         if (raw) {
             return {
-                raw, isMarkdown, locale,
-                slug, url, native,
+                raw,
+                isMarkdown,
+                locale,
+                slug,
+                url,
+                native,
             };
         }
     }
@@ -190,7 +203,7 @@ class ContentProvider {
             if (value.id === currLocale) return find();
 
             const otherURL = `/${value.id}/docs/${slug.toLowerCase()}`;
-            const doc = await this._findContentByURL(otherURL);
+            const doc = await this._findContentByURL(otherURL, false);
             if (doc) {
                 translations.push(doc);
             }
@@ -200,6 +213,23 @@ class ContentProvider {
         await find();
         return translations;
     };
+
+    _slugToFolder(slug) {
+        const replacements = [];
+        for (let i = 0, len = slug.length; i < len; i++) {
+            const s = slug[i];
+            const ss = s + slug[i + 1];
+            if (SLUG_FOLDERS[ss]) {
+                replacements.push(SLUG_FOLDERS[ss]);
+                i++;
+            } else if (SLUG_FOLDERS[s]) {
+                replacements.push(SLUG_FOLDERS[s]);
+            } else {
+                replacements.push(s);
+            }
+        }
+        return replacements.join('');
+    }
 }
 
 export default new ContentProvider();

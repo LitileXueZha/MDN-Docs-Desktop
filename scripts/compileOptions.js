@@ -5,7 +5,10 @@ exports.cssCompileOptions = {
     output: {
         file: 'dist/css/[name].css',
         style: 'compressed',
-        loadPaths: ['node_modules/@primer/primitives/dist/scss'],
+        loadPaths: [
+            'node_modules/@primer/primitives/dist/scss',
+            'node_modules/highlight.js/styles',
+        ],
         sourceMap: true,
     },
 };

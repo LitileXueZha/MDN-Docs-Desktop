@@ -1,13 +1,15 @@
 import { BrowserWindow, ipcMain } from 'electron';
-import { IPC_CONTROL_BUTTONS } from 'e/constants';
+import { IPC_CONTROL_BUTTONS, IPC_CONTROL_BUTTONS_WINDOW } from 'e/constants';
 
 class ControlButtons {
     start() {
         ipcMain.on(IPC_CONTROL_BUTTONS, this.onClick);
+        ipcMain.handle(IPC_CONTROL_BUTTONS_WINDOW, this._onWindowStatus);
     }
 
     stop() {
         ipcMain.removeListener(IPC_CONTROL_BUTTONS, this.onClick);
+        ipcMain.removeHandler(IPC_CONTROL_BUTTONS_WINDOW);
     }
 
     onClick = (ev, action) => {
@@ -29,6 +31,15 @@ class ControlButtons {
                 break;
         }
     };
+
+    _onWindowStatus(ev) {
+        const win = BrowserWindow.fromWebContents(ev.sender);
+        return {
+            visible: win.isVisible(),
+            maximized: win.isMaximized(),
+            fullScreen: win.isFullScreen(),
+        };
+    }
 }
 
 export default new ControlButtons();
