@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src http://localhost:8012; img-src * data:">
-    <title>MDN Docs Desktop</title>
-    <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
+    {{Heads}}
     <link rel="stylesheet" href="/dist/css/index.css">
 </head>
 <body>
@@ -15,7 +11,7 @@
             {{Controls}}
         </div>
     </div>
-    <main class="container">
+    <main class="container" id="container-root">
         <div class="home-page">
             <div class="big-header">
                 {{Logo}}
@@ -25,33 +21,37 @@
                 <svg class="mdv-icon search-icon">
                     <use xlink:href="#ion-search" />
                 </svg>
-                <input type="search" class="search-index" id="search" placeholder="搜索文档">
+                <input type="text" class="search-index mdv-input" id="search" placeholder="搜索文档">
             </div>
             <div class="intro">
-                <details class="intro-item" open>
-                    <summary class="title">
-                        <svg class="mdv-icon details-marker"><use xlink:href="#ion-caret-forward" /></svg>
-                        开始使用
-                    </summary>
-                    <ol class="usage-steps">
-                        <li>下载&nbsp;<code>content</code></li>
-                        <li>下载&nbsp;<code>translated-content</code>，安装&nbsp;<code>git</code>（可选）</li>
-                        <li>转到&nbsp;<button id="open-setting">设置</button>&nbsp;保存下载路径</li>
-                    </ol>
+                <details class="intro-item get-start" open>
+                    <summary class="title">开始使用</summary>
                 </details>
-                <div class="divider"></div>
-                <details class="intro-item">
-                    <summary class="title">
-                        <svg class="mdv-icon details-marker"><use xlink:href="#ion-caret-forward" /></svg>
-                        更多
-                    </summary>
-                    <div class="more">
+                <span class="intro-item" id="more">更多</span>
+                <ol class="usage-steps">
+                    <li class="step">
+                        <span class="step-icon">1</span>
+                        下载 content 仓库
+                    </li>
+                    <li class="step">
+                        <span class="step-icon">2</span>
+                        下载 translated-content 仓库与安装 Git（可选）
+                    </li>
+                    <li class="step done">
+                        <span class="step-icon">3</span>
+                        <!-- <svg class="mdv-icon step-icon"><use xlink:href="#ion-checkmark"></svg> -->
+                        转到<button id="open-setting">设置</button>保存下载路径
+                    </li>
+                </ol>
+                <dialog class="modal" id="more-modal">
+                    <form method="dialog">
+                        <h2 class="modal-title">更多</h2>
                         <p>
                             MDN web docs 是一个共建的网络学习平台，多年来一直是查询文档标准的好地方，其内容托管在 Github 仓库&nbsp;
                             <a href="https://github.com/mdn/content">content</a>
                             &nbsp;和翻译仓库&nbsp;
                             <a href="https://github.com/mdn/translated-content">translated-content</a>
-                            &nbsp;上，主要由 Mozilla 进行托管和维护。
+                            上，主要由 Mozilla 进行托管和维护。
                         </p>
                         <p>
                             2022/03/01, Mozilla 发布了&nbsp;
@@ -59,11 +59,14 @@
                             ，一个奇怪的 logo，糟糕体验的交互和排版设计，还有随后将会推出的 Plus 版本 😰😨😱
                         </p>
                         <p>
-                            MDN Docs Desktop 是一个离线的文档浏览器，依赖于内容仓库，对排版和交互进行了优化。
+                            <b>MDN Docs Desktop</b>&nbsp;是一个离线的文档浏览器，依赖于内容仓库，对排版和交互进行了优化。
                         </p>
                         <p class="footer hidden">©litilexuezha</p>
-                    </div>
-                </details>
+                        <p style="text-align: center;">
+                            <button class="mdv-button" style="width: 80px;">关闭</button>
+                        </p>
+                    </form>
+                </dialog>
                 <!-- <h4 style="margin: 0;">开始使用</h4> -->
             </div>
         </div>
@@ -73,7 +76,7 @@
                     <svg class="mdv-icon search-icon">
                         <use xlink:href="#ion-search" />
                     </svg>        
-                    <input type="text" id="nav-input" placeholder="搜索文档">
+                    <input type="text" class="mdv-input" id="nav-input" placeholder="搜索文档">
                     <kbd class="search-keybind" title="按下 / 键聚焦">/</kbd>
                 </div>
                 <div class="nav-block">
@@ -132,7 +135,7 @@
                         <li class="toc-item"><a>垃圾回收</a></li>
                         <li class="toc-item"><a>参考</a></li>
                     </ol>
-                    <div id="scroll-top" style="display: none;" role="button">
+                    <div id="scroll-top" style="visibility: hidden;" role="button">
                         <svg class="mdv-icon"><use xlink:href="#akar-top"></svg>
                     </div>
                 </div>
@@ -141,9 +144,13 @@
         <div id="sct-observe-helper"></div>
     </main>
     <div class="statusbar">
-        <div class="message">
-            <svg class="mdv-icon"><use xlink:href="#eos-loading" /></svg>
-            <span>状态消息。正在初始化...</span>
+        <div class="message" title="控制台查看详细信息">
+            <svg class="mdv-icon"><use xlink:href="#" /></svg>
+            <!-- <svg class="mdv-icon"><use xlink:href="#eos-loading" /></svg> -->
+            <!-- <svg class="mdv-icon"><use xlink:href="#ion-close-circle" /></svg> -->
+            <!-- <svg class="mdv-icon"><use xlink:href="#ion-checkmark" /></svg> -->
+            <!-- <svg class="mdv-icon"><use xlink:href="#ion-warning" /></svg> -->
+            <span class="text">Welcome！你好，世界</span>
         </div>
         <div class="custom"></div>
         <div class="app"></div>

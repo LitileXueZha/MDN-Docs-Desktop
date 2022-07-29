@@ -4,9 +4,9 @@ import {
     shell,
 } from 'electron';
 import path from 'path';
-import { IPC_CONTEXT_MENU } from 'e/constants';
+import { IPC_CONTEXT_MENU, IPC_FIND_IN_PAGE, IPC_OPEN_DIALOG } from 'e/constants';
 import aps from 'e/modules/AppSettings';
-import logo from '../../assets/mdn-web-docs.png';
+import logo from '../../../assets/mdn-web-docs.png';
 
 class ContextMenu {
     constructor() {
@@ -28,17 +28,19 @@ class ContextMenu {
 
     build() {
         this.current = Menu.buildFromTemplate([
-            { label: '返回', click: this._onGoBack },
-            { label: '前进', click: this._onGoForward },
+            { label: '返回', click: this._onGoBack, enabled: false },
+            { label: '前进', click: this._onGoForward, enabled: false },
             { label: '刷新', role: 'reload', accelerator: 'CmdOrCtrl+R' },
             { type: 'separator' },
             {
                 label: '暗黑主题', type: 'checkbox', checked: aps.data.darkMode, click: this._onDarkModeClick,
             },
-            { label: '检查', role: 'toggleDevTools', accelerator: 'F12' },
-            { type: 'separator' },
+            { label: '网页内查找', accelerator: 'CmdOrCtrl+F', click: this._onFindWidget },
             { label: '在 MDN 上查看', icon: this.icon, click: this._onMDNForward },
-            { label: '网页内查找', accelerator: 'CmdOrCtrl+F' },
+            { type: 'separator' },
+            { label: '开发者菜单', enabled: false },
+            { label: '检查', role: 'toggleDevTools', accelerator: 'F12' },
+            { label: '设置', click: this._onOpenSetting },
             { label: '重新启动', click: this._onRelaunch },
             { label: '退出', role: 'quit' },
         ]);
@@ -49,6 +51,11 @@ class ContextMenu {
             return;
         }
         const win = BrowserWindow.fromWebContents(ev.sender);
+        const back = ev.sender.canGoBack();
+        const forward = ev.sender.canGoForward();
+        this.current.items[0].enabled = back;
+        this.current.items[1].enabled = forward;
+        this.current.items[4].checked = aps.data.darkMode;
         this.current.popup({ window: win });
     };
 
@@ -74,6 +81,14 @@ class ContextMenu {
         const url = win.webContents.getURL();
         const { pathname, hash } = new URL(url);
         shell.openExternal(`${MDN}${pathname}${hash}`);
+    };
+
+    _onFindWidget = (ev, win) => {
+        ipcMain.emit(IPC_FIND_IN_PAGE, { sender: win.webContents });
+    };
+
+    _onOpenSetting = (ev, win) => {
+        ipcMain.emit(IPC_OPEN_DIALOG, null, 3);
     };
 
     _onRelaunch = (e) => {

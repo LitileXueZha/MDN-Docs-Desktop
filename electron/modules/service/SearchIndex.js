@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { app, ipcMain } from 'electron';
 import { IPC_READ_SEARCH_INDEX } from 'e/constants';
-import locales from 'e/modules/Locales';
+import locales from 'e/modules/service/Locales';
 
 const STATUS_PENDING = 'pending';
 const STATUS_DONE = 'done';

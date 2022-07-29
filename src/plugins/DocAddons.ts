@@ -52,6 +52,7 @@ export function preferInterlink(render: DocRender) {
     const $links = $content.getElementsByTagName('a');
     for (const a of $links) {
         const href = a.getAttribute('href');
+        // Only replace the doc
         const newHref = href?.replace(REG_MDN_DOCS, '$1');
         if (newHref && newHref !== href) {
             a.href = newHref;
@@ -63,3 +64,62 @@ export function preferInterlink(render: DocRender) {
  * Add a <div> wrapped <table> for enhanced scroll
  */
 export function enhanceTableWrapper() {}
+
+/**
+ * Fix the relative path of assets, see supports in `electron/modules/SchemeMDV`
+ */
+export function absoluteAssets(render: DocRender) {
+    const REG_PROTOCOL = /^[a-z]+:/;
+    const $content: HTMLElement = render._$refs.content;
+    const $images = $content.getElementsByTagName('img');
+    const { url } = render.current;
+    for (const img of $images) {
+        const src = img.getAttribute('src');
+        if (!src) continue;
+        if (src[0] === '/') continue;
+        if (REG_PROTOCOL.test(src)) continue;
+
+        img.src = `${url}/${src}`;
+    }
+}
+
+/**
+ * Add a tip and open icon for external links
+ */
+export function externalLinkTip(render: DocRender) {
+    const REG_PROTOCOL = /^https?:/;
+    const $content: HTMLElement = render._$refs.content;
+    const $links = $content.getElementsByTagName('a');
+    for (const $a of $links) {
+        if (!REG_PROTOCOL.test($a.href)) continue;
+
+        $a.insertAdjacentHTML('beforeend', '<svg class="external-icon"><use xlink:href="#ion-open-outline"/></svg>');
+        $a.addEventListener('mouseenter', enter);
+        $a.addEventListener('mouseleave', leave);
+    }
+
+    let $tip = document.getElementsByClassName('external-tip')[0] as HTMLElement;
+    if (!$tip) {
+        $tip = document.createElement('div');
+        $tip.className = 'external-tip hidden';
+        document.body.appendChild($tip);
+    }
+
+    function enter(this: HTMLAnchorElement, e: MouseEvent) {
+        $tip.classList.remove('hidden');
+        $tip.textContent = this.href;
+
+        const {
+            top, bottom, height, left,
+        } = this.getBoundingClientRect();
+        let topTip = top + height + 8;
+        if (top > document.documentElement.clientHeight / 2) {
+            topTip = top - $tip.clientHeight;
+        }
+        $tip.style.left = `${e.pageX - 24}px`;
+        $tip.style.top = `${topTip}px`;
+    }
+    function leave() {
+        $tip.classList.add('hidden');
+    }
+}

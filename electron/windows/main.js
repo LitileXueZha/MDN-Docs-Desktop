@@ -43,6 +43,11 @@ class MainWindow {
         await win.loadURL(this.URL);
         win.on('maximize', this._onMaximize);
         win.on('unmaximize', this._onUnmaximize);
+        win.webContents.on('did-finish-load', () => {
+            if (win.isMaximized()) {
+                this._onMaximize();
+            }
+        });
         win.webContents.on('will-navigate', this._onWillNavigate);
         this.win = win;
     }

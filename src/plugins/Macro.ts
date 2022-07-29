@@ -24,7 +24,7 @@ const Macros = {
 };
 
 const FUNC_MAPS: any = {};
-const REG_MACRO = /(?<!\\){{(.+?)}}/gm;
+const REG_MACRO = /(?<!\\){{([^]+?)}}/gm;
 const REG_MACRO_NAME = /\w+/;
 
 Object.keys(Macros).forEach((name) => {
@@ -45,6 +45,8 @@ function transform(matchText: string, macroFn: string) {
             return name;
         });
         if (support) {
+            // Fix the syntax error of \n in strings
+            js = js.replace(/\n/g, '');
             // Missing brackets ()
             if (js.indexOf('(') < 0) {
                 js = `${js}()`;
@@ -53,7 +55,7 @@ function transform(matchText: string, macroFn: string) {
         }
     } catch (e) {
         // Supress the error
-        // console.error(e);
+        console.error(e);
     }
 
     return Macros.unsupport(matchText);

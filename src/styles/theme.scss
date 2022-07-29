@@ -8,10 +8,9 @@
     --bg-select: var(--color-scale-yellow-0);
     --kbd-gradient: linear-gradient(to bottom, var(--color-scale-gray-0), var(--color-scale-gray-2));
     --bg-scrollbar: var(--color-scale-gray-1);
-    --shadow-scroll-top:
-        rgb(0 0 0 / 20%) 0px 3px 5px -1px,
-        rgb(0 0 0 / 14%) 0px 6px 10px 0px,
-        rgb(0 0 0 / 12%) 0px 1px 18px 0px;
+    --shadow: 0px 4px 8px 0px rgb(0 0 0 / 15%);
+    --bg-on-paper: var(--color-scale-white);
+    --bg-button: var(--color-scale-gray-2);
 }
 @mixin colors-dark {
     --bg-canvas-hover: var(--color-scale-gray-6);
@@ -19,7 +18,9 @@
     --bg-select: var(--color-scale-yellow-8);
     --kbd-gradient: linear-gradient(to bottom, var(--color-scale-gray-7), var(--color-scale-gray-8));
     --bg-scrollbar: var(--color-canvas-inset);
-    --shadow-scroll-top: var(--color-shadow-large);
+    --shadow: var(--color-shadow-large);
+    --bg-on-paper: var(--color-scale-gray-7);
+    --bg-button: var(--color-scale-gray-6);
 }
 
 :root {

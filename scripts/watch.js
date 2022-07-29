@@ -22,7 +22,9 @@ class Watcher extends EventEmitter {
     async start() {
         const START = Date.now();
         const rollc = await loadConfigFile(path.resolve(__dirname, '../rollup.config.js'));
-        // const bundle = await rollup.rollup(res.options[0]);
+        // const bundle = await rollup.rollup(rollc.options[1]);
+        // console.log(bundle.getTimings())
+        // Reference https://github.com/rollup/rollup/issues/2716#issuecomment-466628455
         // const { output } = await bundle.write(res.options[0].output[0]);
         // await bundle.close();
         const watcher = rollup.watch(rollc.options);

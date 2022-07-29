@@ -94,6 +94,14 @@ table {
     vertical-align: middle;
 }
 
+.external-icon {
+    margin: 0 4px 0 2px;
+    width: 0.8em;
+    height: 0.8em;
+    vertical-align: middle;
+    color: var(--color-fg-default);
+}
+
 .macro {
     color: var(--fg-second);
     font-weight: lighter;

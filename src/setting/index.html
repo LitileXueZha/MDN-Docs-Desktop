@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>设置</title>
-    <link rel="stylesheet" href="/dist/css/index.css">
+    {{Heads}}
+    <link rel="stylesheet" href="/dist/css/setting.css">
 </head>
 <body>
     <div class="titlebar">
@@ -18,27 +15,84 @@
         </div>
     </div>
     <main class="container">
-        <h1>Hello World!</h1>
-        We are using Node.js <span id="node-version"></span>,
-        Chromium <span id="chrome-version"></span>,
-        and Electron <span id="electron-version"></span>.
-        <br>
-        <a href="#/zh-CN/values">zh-CN values</a>
-        <button id="open">打开弹窗</button>
-        <button id="open1">关于</button>
-        <button id="open2">表情面板</button>
-        <label for="l1">
-            <input type="checkbox" name="" id="l1">
-            😀 复选框
-        </label>
-        <label for="l2">
-            <input type="radio" name="" id="l2">
-            单选框
-        </label>
+        <div class="section">
+            <form class="body">
+                <table class="settings-table">
+                    <tbody>
+                        <tr class="row-start">
+                            <td class="label">语言</td>
+                            <td>
+                                <div class="mdv-select">
+                                    <select class="language-select" name="language">
+                                        <option value="zh-CN">中文</option>
+                                        <option value="en-US" disabled>English</option>
+                                    </select>
+                                    <svg class="mdv-icon"><use xlink:href="#ion-chevron-down"></svg>
+                                </div>
+                            </td>
+                            <td colspan="2">
+                                <label class="label-inline" for="dark-mode">
+                                    暗黑主题
+                                </label>
+                                <div class="switch">
+                                    <input type="checkbox" class="switch-checkin" name="dark-mode">
+                                    <div class="switch-path"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">内容仓库目录</td>
+                            <td class="input" colspan="3">
+                                <div class="opener">
+                                    <input
+                                        type="text"
+                                        class="opener-in mdv-input"
+                                        name="content-dir"
+                                        placeholder="content"
+                                    >
+                                    <!-- <div class="opener-icon">浏览...</div> -->
+                                    <svg class="mdv-icon"><use xlink:href="#ion-folder-open"></svg>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="label">翻译仓库目录</td>
+                            <td class="input" colspan="3">
+                                <div class="opener">
+                                    <input
+                                        type="text"
+                                        class="opener-in mdv-input"
+                                        name="translate-dir"
+                                        placeholder="translated-content"
+                                    >
+                                    <svg class="mdv-icon"><use xlink:href="#ion-folder-open"></svg>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td colspan="3">
+                                <p id="detect-translations">检测到&nbsp;<b>0</b>&nbsp;种翻译</p>
+                                <div class="path-actions">
+                                    <button class="mdv-button" id="download" type="button">下载</button>
+                                    <button class="mdv-button" id="sync" type="button">同步仓库</button>
+                                    <!-- <button class="mdv-button" disabled="disabled">未检测到Git</button> -->
+                                    <span class="no-git">Git 未安装</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
     </main>
+    <div class="actions">
+        <button class="mdv-button" id="save">应用更改</button>
+        <button class="mdv-button outline" id="close">取消</button>
+    </div>
 
     {{SVGIcons}}
 
-    <script src="/dist/js/index.js"></script>
+    <script src="/dist/js/setting.js" type="module"></script>
 </body>
 </html>

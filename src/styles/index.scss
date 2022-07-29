@@ -14,34 +14,13 @@ html {
     text-size-adjust: 100%;
 }
 
-
-input {
-    padding: 8px 10px;
-    font: inherit;
-    color: var(--color-fg-default);
-    background-color: var(--color-canvas-default);
-    border: 1px solid var(--color-border-default);
-    border-radius: 2px;
-    transition: .15s;
-    box-sizing: border-box;
-    
-    &:focus {
-        border-color: var(--color-neutral-emphasis);
-        outline: none;
-    }
-
-    &::placeholder {
-        color: var(--fg-second);
-        font-size: 1em;
-    }
-}
-
 code {
     padding: 0.2em 0.4em;
     background-color: var(--color-neutral-muted);
     font-size: 0.875em;
     font-family: $font-family-code;
     border-radius: 4px;
+    vertical-align: text-bottom;
 }
 
 ::-webkit-scrollbar {
@@ -58,6 +37,10 @@ code {
     border: 4px solid var(--bg-scrollbar);
 }
 
+::selection {
+    background-color: var(--color-success-muted);
+}
+
 // mdv prefix
 .mdv-icon {
     display: inline-block;
@@ -68,6 +51,25 @@ code {
 i.mdv-icon {
     font-style: normal;
     vertical-align: text-bottom;
+}
+.mdv-input {
+    padding: 8px 10px;
+    font: inherit;
+    color: var(--color-fg-default);
+    background-color: var(--color-canvas-default);
+    border: 1px solid var(--color-border-default);
+    border-radius: 2px;
+    box-sizing: border-box;
+    
+    &:focus {
+        border-color: var(--color-neutral-emphasis);
+        outline: none;
+    }
+
+    &::placeholder {
+        color: var(--fg-second);
+        font-size: 1em;
+    }
 }
 .mdv-select {
     display: inline-block;
@@ -96,6 +98,43 @@ i.mdv-icon {
         pointer-events: none;
     }
 }
+.mdv-button {
+    padding: 0.3em 0.6em;
+    background-color: var(--bg-button);
+    font-size: $font-size-small;
+    color: var(--color-fg-default);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &.outline {
+        background-color: transparent;
+        border-color: var(--color-border-default);
+    }
+
+    &:disabled {
+        opacity: .75;
+        cursor: not-allowed;
+    }
+
+    &:active {
+        box-shadow: var(--shadow);
+    }
+}
+
+.external-tip {
+    position: absolute;
+    padding: 2px 6px;
+    color: var(--color-fg-default);
+    font-size: 12px;
+    background-color: var(--color-canvas-subtle);
+    border: 1px solid var(--color-border-muted);
+    border-radius: 2px;
+    box-shadow: var(--color-shadow-small);
+    z-index: 99;
+    pointer-events: none;
+}
+
 // alias
 .hidden {
     display: none;

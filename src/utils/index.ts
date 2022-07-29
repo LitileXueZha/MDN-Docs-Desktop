@@ -17,3 +17,15 @@ export function throttle(fn: Function, threshold: number = 10, by?: () => number
         fn(...args);
     };
 }
+
+export function logger(label: string, title: string, detail: any = '') {
+    console.log(
+        '%c%s%c%s%c%o',
+        'color:#fff;background-color:purple;padding:0 4px;',
+        label,
+        'font-weight:bold;padding:0 4px;',
+        title,
+        'color:gray',
+        detail,
+    );
+}

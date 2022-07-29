@@ -1,0 +1,80 @@
+@import '../styles/index.scss';
+
+#find-in-page {
+    display: flex;
+    align-items: center;
+    width: 360px;
+    height: 42px;
+    padding: 0 5px;
+    background-color: var(--bg-on-paper);
+    z-index: 9;
+
+    .input {
+        flex: 1;
+        padding: 0 2px;
+        height: 24px;
+        vertical-align: top;
+        font-size: $font-size-small;
+        border: none;
+        background-color: var(--color-canvas-inset);
+    }
+
+    .btn {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        padding: 8px;
+        box-sizing: border-box;
+        border-radius: 50%;
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--color-neutral-subtle);
+        }
+
+        &.prev .mdv-icon {
+            transform: rotateZ(180deg);
+        }        
+    }
+    &.empty .btn:not(.close) {
+        color: var(--fg-second);
+        pointer-events: none;
+    }
+    .drag {
+        position: relative;
+        top: -1px;
+        padding: 0 8px 0 4px;
+        cursor: grab;
+    }
+    &.dragging .drag {
+        cursor: grabbing;
+    }
+    .icon {
+        margin-right: 4px;
+        width: 36px;
+        height: 36px;
+    }
+    .mdv-icon {
+        width: 16px;
+        height: 16px;
+        pointer-events: none;
+    }
+    .drag,
+    .result,
+    .logo,
+    .icon {
+        user-select: none;
+        -webkit-app-region: drag;
+    }
+    .result {
+        width: 13px*8;
+        text-align: right;
+        font-size: 13px;
+    }
+
+    .divider {
+        margin: 0 4px;
+        height: 24px;
+        border-left: 1px solid var(--color-border-default);
+    }
+}

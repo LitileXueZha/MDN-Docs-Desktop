@@ -13,4 +13,5 @@ sse.addEventListener('message', (ev) => {
         mdv.reload();
     }
 });
+sse.onerror = () => sse.close();
 window.addEventListener('unload', () => sse.close());

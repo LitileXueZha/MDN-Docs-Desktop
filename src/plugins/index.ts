@@ -15,11 +15,6 @@ export function initControls() {
     });
     mdv.on('win-max', () => $controls.classList.add('max'));
     mdv.on('win-unmax', () => $controls.classList.remove('max'));
-    mdv.getWindow().then((res) => {
-        if (res.maximized) {
-            $controls.classList.add('max');
-        }
-    });
 }
 
 /**

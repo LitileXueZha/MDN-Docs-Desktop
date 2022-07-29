@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{Heads}}
+    <link rel="stylesheet" href="/dist/css/find-widget.css">
+</head>
+<body>
+    <div id="find-in-page">
+        <!-- <div class="drag" role="button" title="按住后拖动">🦔</div> -->
+        <!-- {{Logo}} -->
+        <svg class="icon"><use xlink:href="#ic-find-in-page"></svg>
+        <input type="text" class="input mdv-input" id="find-input" placeholder="页面内查找" autofocus>
+        <span class="result">0/0</span>
+        <div class="divider"></div>
+        <div class="btn prev" role="button" data-id="prev">
+            <svg class="mdv-icon"><use xlink:href="#ion-chevron-down" /></svg>
+        </div>
+        <div class="btn" role="button" data-id="next">
+            <svg class="mdv-icon"><use xlink:href="#ion-chevron-down" /></svg>
+        </div>
+        <div class="btn close" role="button" data-id="close">
+            <svg class="mdv-icon"><use xlink:href="#chrome-close" /></svg>
+        </div>
+    </div>
+
+    {{SVGIcons}}
+
+    <script src="/dist/js/find-widget.js" type="module"></script>
+</body>
+</html>

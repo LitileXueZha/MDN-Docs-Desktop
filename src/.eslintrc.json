@@ -23,6 +23,7 @@
         "indent": ["error", 4],
         "no-restricted-syntax": "off",
         "no-use-before-define": ["error", {"functions": false}],
+        "one-var": "off",
         "no-new": "off",
         "no-underscore-dangle": "off",
         "no-unsafe-optional-chaining": "off",

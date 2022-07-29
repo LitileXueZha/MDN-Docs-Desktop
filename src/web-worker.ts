@@ -25,7 +25,7 @@ onmessage = function onMessage(e: MessageEvent) {
     default:
         break;
     }
-}
+};
 
 function onParseDoc(data: Doc, done: Function) {
     const { isMarkdown, raw, locale } = data;

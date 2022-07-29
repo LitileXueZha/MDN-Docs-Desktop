@@ -64,6 +64,10 @@ export default {
         const displayName = (label || name).toLowerCase();
         return `<a href="${url}"><code>${displayName}</code></a>`;
     },
+    SVGElement(el: string) {
+        const url = `/${this.env.locale}/docs/Web/SVG/Element/${el}`;
+        return `<a href="${url}"><code>&lt;${el}&gt;</code></a>`;
+    },
     SpecName(name: string, anchor?: string, label?: string) {
         return `<span class="specification">${label || name}</span>`;
     },

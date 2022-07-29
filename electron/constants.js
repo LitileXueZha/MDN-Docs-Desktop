@@ -10,6 +10,13 @@ export const IPC_READ_PARENT_CONTENT = 'ipc:read-content_parent';
 export const IPC_READ_TRANSLATE_CONTENT = 'ipc:read-content_translations';
 export const IPC_READ_SEARCH_INDEX = 'ipc:search-index_read';
 export const IPC_RELOAD = 'ipc:reload';
+export const IPC_FIND_IN_PAGE = 'ipc:find-in-page';
+export const IPC_STOP_FIND_IN_PAGE = 'ipc:find-in-page_stop';
+export const IPC_GET_SETTINGS = 'ipc:get-settings';
+export const IPC_APPLY_SETTINGS = 'ipc:apply-settings';
+export const IPC_DETECT_LOCALES = 'ipc:detect-locales';
+export const IPC_DOWNLOAD_REPO = 'ipc:download-repository';
+export const IPC_UPDATE_REPO = 'ipc:update-repository';
 
 // https://primer.style/primitives/colors
 export const COLORS = {

@@ -44,7 +44,9 @@ const ELECTRON = defineConfig({
 const JS = defineConfig({
     input: {
         index: 'src/index.ts',
+        setting: 'src/setting/index.ts',
         'web-worker': 'src/web-worker.ts',
+        'find-widget': 'src/find-widget/index.ts',
     },
     output: {
         dir: DIR_OUTPUT,
@@ -62,6 +64,7 @@ const JS = defineConfig({
         json(),
         ts({ tsconfig: 'src/tsconfig.json' }),
     ],
+    // perf: true,
     onwarn(warnings, warn) {
         if (warnings.code === 'UNRESOLVED_IMPORT') {
             // Modules are resolved by typescript

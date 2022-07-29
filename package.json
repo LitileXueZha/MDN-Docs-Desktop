@@ -10,6 +10,7 @@
     "watch-electron": "rollup -c -w",
     "watch-js": "cd src && rollup -c -w",
     "compile-css": "sass src/index.scss dist/index.css -s compressed -I node_modules/@primer/primitives/dist/scss -c",
+    "lint": "eslint ./electron --fix || eslint --ext js,ts ./src --fix",
     "test": "mocha"
   },
   "repository": {
@@ -41,7 +42,7 @@
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "debug": "^4.3.3",
-    "electron": "^17.1.0",
+    "electron": "^17.4.7",
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",

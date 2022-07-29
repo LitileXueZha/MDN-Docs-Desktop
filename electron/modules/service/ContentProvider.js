@@ -19,10 +19,15 @@ const SLUG_FOLDERS = {
     '?': '_question_',
 };
 
+const ERR_INVALID = 1;
+const ERR_INCORRECT_SETTGINS = 2;
+const ERR_NOT_FOUND = 3;
+
 class ContentProvider {
     constructor() {
         this.redirects = new Map();
         this._loadedRedirects = new Set();
+        this._findError = null;
     }
 
     start() {
@@ -40,15 +45,8 @@ class ContentProvider {
     _onRead = async (e) => {
         const win = BrowserWindow.fromWebContents(e.sender);
         const url = e.sender.getURL();
-        const { pathname } = new URL(url);
-        const route = decodeURIComponent(pathname).toLowerCase();
-        let fixDocsURL = route;
-        // Fix missing '/docs' slug
-        if (route.indexOf('/docs') < 0) {
-            fixDocsURL = route.replace(/^\/([\w-]+)/, '/$1/docs');
-        }
-
-        const doc = await this._findContentByURL(fixDocsURL);
+        const route = this._normalizedURL(url);
+        const doc = await this._getContentByURL(route);
 
         if (doc) {
             return doc;
@@ -59,7 +57,7 @@ class ContentProvider {
         // - /docs/web/html
         dialog.showMessageBox(win, {
             type: 'error',
-            message: `ContentProvider 未支持文档路径\n${pathname}`,
+            message: `ContentProvider 未支持文档路径\n${new URL(url).pathname}\n\nError_${this._findError}`,
             noLink: true,
         });
     };
@@ -75,21 +73,33 @@ class ContentProvider {
      *     -- index.{md|html}
      * @param {string} url eg: /zh-CN/docs/web/HTML
      */
-    async _findContentByURL(url, useFallback = true) {
+    async _getContentByURL(url, useFallback = true, redirect = true) {
         const matches = url.match(REG_CONTENT_URL);
         // Invalid url
-        if (!matches) return;
+        if (!matches) {
+            this._findError = ERR_INVALID;
+            return;
+        }
 
         const locale = matches[1];
         const slug = matches[3];
         const localeValues = locales.list.get(locale);
         // No translation
-        if (!localeValues) return;
+        if (!localeValues) {
+            if (useFallback && locale !== locales.DEFAULT) {
+                return this._getContentByURL(url.replace(locale, locales.DEFAULT), false);
+            }
+            this._findError = ERR_INCORRECT_SETTGINS;
+            return;
+        }
 
-        // Found redirect
-        const reURL = await this._getRedirectURL(url).catch(() => {});
-        if (reURL && reURL !== url) {
-            return this._findContentByURL(reURL);
+        // Fix cycle redirects
+        if (redirect) {
+            const reURL = await this._getRedirectURL(url).catch(() => {});
+            // Found redirect
+            if (reURL && reURL !== url) {
+                return this._getContentByURL(reURL, true, false);
+            }
         }
 
         const { dir, native } = localeValues;
@@ -103,10 +113,11 @@ class ContentProvider {
             // Fallback
             if (useFallback && locale !== locales.DEFAULT) {
                 const fallbackURL = url.replace(locale, locales.DEFAULT);
-                return this._findContentByURL(fallbackURL);
+                return this._getContentByURL(fallbackURL, false);
             }
 
             // Not found
+            this._findError = ERR_NOT_FOUND;
             return;
         }
 
@@ -118,6 +129,7 @@ class ContentProvider {
             return fs.readFile(filePath, 'utf-8');
         }).catch(() => {
             // Not found index file
+            this._findError = ERR_NOT_FOUND;
         });
 
         if (raw) {
@@ -143,12 +155,12 @@ class ContentProvider {
         const { contentDir, translateDir } = aps.data;
         const dir = locale === locales.DEFAULT ? contentDir : translateDir;
         const filePath = path.join(dir, 'files', locale, REDIRECT_FILE);
-        const rl = readline.createInterface({
-            input: createReadStream(filePath),
+        const reader = readline.createInterface({
+            input: createReadStream(filePath).on('error', reject),
             crlfDelay: Infinity,
         });
 
-        rl.on('line', (line) => {
+        reader.on('line', (line) => {
             if (!line) return;
             if (line[0] === '#') return; // comments
 
@@ -158,16 +170,14 @@ class ContentProvider {
 
             this.redirects.set(fromURL, toURL);
         });
-        rl.on('close', () => {
+        reader.on('close', () => {
             this._loadedRedirects.add(locale);
             resolve(this.redirects.get(url));
         });
     });
 
     _onReadParents = async (e) => {
-        const url = e.sender.getURL();
-        const { pathname } = new URL(url);
-        const route = decodeURIComponent(pathname).toLowerCase();
+        const route = this._normalizedURL(e.sender.getURL());
         const routeSplits = route.split('/');
         const routeParents = [];
         let str = '';
@@ -180,7 +190,7 @@ class ContentProvider {
         }
 
         if (routeParents.length > 0) {
-            const findTasks = routeParents.map((link) => this._findContentByURL(link));
+            const findTasks = routeParents.map((link) => this._getContentByURL(link));
             const parentDocs = await Promise.all(findTasks);
 
             return parentDocs;
@@ -203,7 +213,7 @@ class ContentProvider {
             if (value.id === currLocale) return find();
 
             const otherURL = `/${value.id}/docs/${slug.toLowerCase()}`;
-            const doc = await this._findContentByURL(otherURL, false);
+            const doc = await this._getContentByURL(otherURL, false);
             if (doc) {
                 translations.push(doc);
             }
@@ -229,6 +239,18 @@ class ContentProvider {
             }
         }
         return replacements.join('');
+    }
+
+    _normalizedURL(originalURL) {
+        const { pathname } = new URL(originalURL);
+        const route = decodeURIComponent(pathname).toLowerCase();
+        let fixDocsURL = route;
+        // Fix missing '/docs' slug
+        if (route.indexOf('/docs') < 0) {
+            fixDocsURL = route.replace(/^\/([\w-]+)/, '/$1/docs');
+        }
+
+        return fixDocsURL;
     }
 }
 

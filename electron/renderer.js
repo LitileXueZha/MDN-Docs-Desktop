@@ -2,9 +2,14 @@
 import { ipcRenderer, contextBridge } from 'electron';
 import {
     IPC_APPLICATION_MENU,
+    IPC_APPLY_SETTINGS,
     IPC_CONTEXT_MENU,
     IPC_CONTROL_BUTTONS,
     IPC_CONTROL_BUTTONS_WINDOW,
+    IPC_DETECT_LOCALES,
+    IPC_DOWNLOAD_REPO,
+    IPC_FIND_IN_PAGE,
+    IPC_GET_SETTINGS,
     IPC_OPEN_DIALOG,
     IPC_READ_CONTENT,
     IPC_READ_PARENT_CONTENT,
@@ -12,6 +17,8 @@ import {
     IPC_READ_TRANSLATE_CONTENT,
     IPC_RELOAD,
     IPC_RENDER,
+    IPC_STOP_FIND_IN_PAGE,
+    IPC_UPDATE_REPO,
 } from 'e/constants';
 
 
@@ -38,11 +45,20 @@ const exposedAPIs = {
     openDialog(id) {
         ipcRenderer.send(IPC_OPEN_DIALOG, id);
     },
+    openDialogAsync(id) {
+        return ipcRenderer.invoke(IPC_OPEN_DIALOG, id);
+    },
     openMenu(menuKey, pos) {
         ipcRenderer.send(IPC_APPLICATION_MENU, menuKey, pos);
     },
     openSetting() {
         ipcRenderer.send(IPC_OPEN_DIALOG, 3);
+    },
+    getSettings() {
+        return ipcRenderer.invoke(IPC_GET_SETTINGS);
+    },
+    applySettings(settings) {
+        ipcRenderer.send(IPC_APPLY_SETTINGS, settings);
     },
     getCurrentDocs() {
         return ipcRenderer.invoke(IPC_READ_CONTENT);
@@ -58,6 +74,22 @@ const exposedAPIs = {
     },
     reload() {
         ipcRenderer.send(IPC_RELOAD);
+    },
+    findInPage(...args) {
+        if (args[0] === true) {
+            ipcRenderer.send(IPC_STOP_FIND_IN_PAGE);
+            return;
+        }
+        ipcRenderer.send(IPC_FIND_IN_PAGE, ...args);
+    },
+    getTotalLocales(dir) {
+        return ipcRenderer.invoke(IPC_DETECT_LOCALES, dir);
+    },
+    downloadRepo() {
+        ipcRenderer.send(IPC_DOWNLOAD_REPO);
+    },
+    updateRepo() {
+        ipcRenderer.send(IPC_UPDATE_REPO);
     },
 };
 

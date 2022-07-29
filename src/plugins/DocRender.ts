@@ -92,7 +92,7 @@ class DocRender {
 
     async fetchTranslation() {
         const translations = await mdv.getOtherTranslations(this.current.slug);
-        this.translations = [this.current, ...translations];
+        this.translations = [this.current];
 
         const $lang: HTMLSelectElement = this._$refs.lang;
         const $noTranslate: HTMLElement = this._$refs.noTranslate;
@@ -100,6 +100,7 @@ class DocRender {
         for (const doc of translations) {
             if (doc.locale === this.current.locale) continue;
 
+            this.translations.push(doc);
             const $option = document.createElement('option');
             $option.value = doc.locale;
             $option.textContent = doc.native;
@@ -109,7 +110,7 @@ class DocRender {
         $lang.appendChild($frag);
         $lang.onchange = this._onTranslationChange;
 
-        if (translations.length === 0) {
+        if (this.translations.length === 1) {
             $noTranslate.classList.remove('hidden');
         } else {
             $noTranslate.classList.add('hidden');

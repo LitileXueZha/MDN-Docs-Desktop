@@ -1,26 +1,25 @@
-import path from 'path';
-import fs from 'fs/promises';
 import {
-    app, BrowserWindow, nativeTheme, Menu, ipcMain, dialog,
+    app, BrowserWindow, ipcMain,
     protocol,
     session,
 } from 'electron';
 import mainWindow from 'e/windows/main';
-import setting from 'e/windows/setting';
-import { IPC_CONTEXT_MENU, IPC_OPEN_DIALOG, IPC_RELOAD } from 'e/constants';
+import { IPC_RELOAD } from 'e/constants';
 import aps from 'e/modules/AppSettings';
-import mdv from 'e/modules/SchemeMDV';
-import locales from 'e/modules/Locales';
+import { MDV_SCHEME, registerSchemeMDV } from 'e/modules/SchemeMDV';
 import { version } from '../package.json';
 
 process.env.DEBUG = '*';
 process.env.DEBUG_COLORS = 1;
 const debug = require('debug');
+
 const log = debug('log');
 
-// eslint-disable-next-line
+process.on('uncaughtException', console.error);
+
 export async function startup() {
     log('booting %o', 'MDN-Docs-Desktop');
+    log(app.getLocaleCountryCode());
     app.on('window-all-closed', () => {
         if (process.platform !== 'darwin') {
             app.quit();
@@ -37,57 +36,26 @@ export async function startup() {
             title: '新窗口',
             description: '新建一个窗口',
             program: process.execPath,
-            arguments: path.resolve(__dirname, '..'),
+            arguments: app.getAppPath(),
             iconPath: process.execPath,
             iconIndex: 0,
         },
     ]);
+    app.setName('MDN Docs Desktop');
+    ipcMain.on('error', console.log);
 
-    protocol.registerSchemesAsPrivileged([mdv.SCHEME]);
+    protocol.registerSchemesAsPrivileged([MDV_SCHEME]);
     await app.whenReady();
-    mdv.register();
     await aps.load();
+    registerSchemeMDV();
     await mainWindow.startup();
-    await locales.detect();
-    const [ctxMenu, ctrlButtons, menus, cnProvider, sIndex] = await Promise.all([
-        import('e/modules/ContextMenu'),
-        import('e/modules/ControlButtons'),
-        import('e/modules/ApplicationMenu'),
-        import('e/modules/ContentProvider'),
-        import('e/modules/SearchIndex'),
-    ]);
-    ctxMenu.default.start();
-    ctrlButtons.default.start();
-    menus.default.start();
-    cnProvider.default.start();
-    sIndex.default.start();
 
-    const versions = Object.keys(process.versions).map((k) => `${k}: ${process.versions[k]}`).join('\n');
-    ipcMain.on(IPC_OPEN_DIALOG, (ev, type) => {
-        if (type === 1) {
-            dialog.showMessageBox(BrowserWindow.fromWebContents(ev.sender), {
-                type: 'info',
-                defaultId: 1,
-                buttons: ['复制', '确定'],
-                // title: 'MDN Docs Desktop',
-                message: 'MDN Docs Desktop',
-                detail: versions,
-                noLink: true,
-            });
-        } else if (type === 2) {
-            app.setAboutPanelOptions({
-                applicationName: 'MDN',
-                applicationVersion: version,
-                copyright: '©litilexuezha',
-            });
-            app.showAboutPanel();
-        } else if (type === 3) {
-            // app.showEmojiPanel();
-            // createWindow(win, true);
-            setting.create();
-        }
-    });
+    import('./bootstrap-modules');
+    aps.probeCommands();
+
     ipcMain.on(IPC_RELOAD, (ev) => {
         ev.sender.reloadIgnoringCache();
     });
 }
+
+export const VERSION = version;
