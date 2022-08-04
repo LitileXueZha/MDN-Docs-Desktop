@@ -72,4 +72,6 @@ async function onReady() {
 }
 
 document.addEventListener('DOMContentLoaded', onReady);
-window.addEventListener('contextmenu', mdv.openContextMenu);
+if (__DEV__) {
+    window.addEventListener('contextmenu', mdv.openContextMenu);
+}

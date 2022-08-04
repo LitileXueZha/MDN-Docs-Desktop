@@ -9,9 +9,9 @@ import aps from 'e/modules/AppSettings';
 import bar from 'e/modules/surface/Bar';
 
 const CONTENT_URL = process.env.CONTENT_URL
-    || 'https://github.com/mdn/content.git';
+    || 'https://github.com/LitileXueZha/img2view.git';
 const TRANSLATED_CONTENT_URL = process.env.TRANSLATED_CONTENT_URL
-    || 'https://github.com/mdn/translated-content.git';
+    || 'https://github.com/LitileXueZha/img2view.git';
 
 class RepoManager {
     constructor() {

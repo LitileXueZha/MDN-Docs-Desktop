@@ -20,9 +20,10 @@ const MIME_TYPES = {
  * In-app scheme `mdv` (alias of MDN Docs Viewer)
  */
 export function registerSchemeMDV() {
-    // The project root === ../dist
-    const DIR_ROOT = path.resolve(__dirname, '..');
-    const INDEX = path.join(DIR_ROOT, 'dist/index.html');
+    // Bundle all files in dist/
+    // The project root === ./
+    const DIR_ROOT = __dirname;
+    const INDEX = path.join(DIR_ROOT, 'index.html');
     const REG_DOC = /^\/([a-z-]+)\/docs/i;
 
     protocol.registerFileProtocol(MDV_NAME, async (req, callback) => {

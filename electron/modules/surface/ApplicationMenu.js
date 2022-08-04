@@ -1,6 +1,6 @@
 import os from 'os';
 import {
-    app, BrowserWindow, clipboard, dialog, ipcMain, Menu, shell,
+    app, BrowserWindow, clipboard, dialog, ipcMain, Menu, net, shell,
 } from 'electron';
 import { IPC_APPLICATION_MENU, IPC_OPEN_DIALOG } from 'e/constants';
 import aps from 'e/modules/AppSettings';
@@ -50,7 +50,7 @@ class ApplicationMenu {
             { label: 'MDN 官网', click: this._onMDN },
             { type: 'separator' },
             { label: '开发者工具', role: 'toggleDevTools', accelerator: 'CmdOrCtrl+Shift+I' },
-            { label: '检查更新' },
+            { label: '检查更新', click: this._checkUpdate },
             { label: '关于', click: this._openAbout },
         ]);
         const allMenus = Menu.buildFromTemplate([
@@ -128,6 +128,7 @@ class ApplicationMenu {
             message: 'MDN Docs Desktop',
             detail: messages.join('\n'),
             defaultId: 1,
+            cancelId: 2,
             buttons: ['复制', '确定'],
             noLink: true,
         }).then(({ response }) => {
@@ -136,6 +137,62 @@ class ApplicationMenu {
             }
         });
     };
+
+    _checkUpdate = (ev, win) => {
+        // See https://docs.github.com/en/rest/releases/releases#get-the-latest-release
+        const REPO = 'LitileXueZha/traceback.js';
+        const RELEASE_API_URL = `https://api.github.com/repos/${REPO}/releases/latest`;
+        const req = net.request(RELEASE_API_URL);
+
+        req.on('response', (res) => {
+            const buff = [];
+
+            res.on('data', (chunk) => buff.push(chunk));
+            res.on('end', () => {
+                try {
+                    const data = JSON.parse(Buffer.concat(buff));
+                    const currVer = app.getVersion();
+                    const { tag_name, assets } = data;
+
+                    if (isNewVersion(tag_name, currVer)) {
+                        dialog.showMessageBox(win, {
+                            type: 'info',
+                            message: '有新的版本',
+                            detail: `v${currVer} → ${tag_name}`,
+                            buttons: ['更新'],
+                            noLink: true,
+                            cancelId: 2,
+                        }).then(({ response }) => {
+                            if (response === 0) {
+                                console.log('updating');
+                            }
+                        });
+                        return;
+                    }
+                    dialog.showMessageBox(win, {
+                        type: 'info',
+                        message: 'MDN Docs Desktop',
+                        detail: '暂无更新',
+                        noLink: true,
+                    });
+                } catch (e) {}
+            });
+        });
+        req.end();
+    };
+}
+
+function isNewVersion(tag, current) {
+    if (!tag) return false;
+
+    const nVersions = tag.replace('v', '').split('.');
+    const currVersions = current.split('.');
+    for (let i = 0; i < 3; i++) {
+        if (nVersions[i] > currVersions[i]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 export default new ApplicationMenu();

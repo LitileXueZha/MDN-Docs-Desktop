@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import { app, ipcMain } from 'electron';
 import { IPC_READ_SEARCH_INDEX } from 'e/constants';
 import locales from 'e/modules/service/Locales';
+import Bar from 'e/modules/surface/Bar';
 
 const STATUS_PENDING = 'pending';
 const STATUS_DONE = 'done';
@@ -62,6 +63,7 @@ class SearchIndex {
     };
 
     _buildIndex = async (locale) => {
+        Bar.message.loading('正在初始化搜索索引');
         this.status = STATUS_PENDING;
         const { dir } = locales.list.get(locale);
 
@@ -69,6 +71,7 @@ class SearchIndex {
         const result = await readIndexFiles(dir, locale);
         this._value.set(locale, result);
         this.status = STATUS_DONE;
+        Bar.message.done('搜索索引完成');
 
         const filePath = path.join(this.PATH, `${locale}.json`);
         const fileContent = JSON.stringify(result);

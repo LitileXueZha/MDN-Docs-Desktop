@@ -1,5 +1,5 @@
 import {
-    app, BrowserWindow, ipcMain,
+    app, BrowserWindow, dialog, ipcMain,
     protocol,
     session,
 } from 'electron';
@@ -9,13 +9,17 @@ import aps from 'e/modules/AppSettings';
 import { MDV_SCHEME, registerSchemeMDV } from 'e/modules/SchemeMDV';
 import { version } from '../package.json';
 
-process.env.DEBUG = '*';
-process.env.DEBUG_COLORS = 1;
-const debug = require('debug');
+process.on('uncaughtException', (error) => {
+    dialog.showErrorBox('uncaughtException', error.stack);
+    // app.quit();
+});
+function log() {}
+if (__DEV__) {
+    process.env.DEBUG = '*';
+    process.env.DEBUG_COLORS = 1;
+    log = require('debug')('log');
+}
 
-const log = debug('log');
-
-process.on('uncaughtException', console.error);
 
 export async function startup() {
     log('booting %o', 'MDN-Docs-Desktop');

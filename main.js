@@ -1,1 +1,1 @@
-require('./dist/bootstrap.js').startup();
+require('./bootstrap.js').startup();

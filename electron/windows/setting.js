@@ -6,7 +6,7 @@ import aps from 'e/modules/AppSettings';
 class SettingWindow {
     constructor() {
         this.ID = 'setting';
-        this.URL = 'mdv://internal-files/dist/setting.html';
+        this.URL = 'mdv://internal-files/setting.html';
         this.win = null;
     }
 

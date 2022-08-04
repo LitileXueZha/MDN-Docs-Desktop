@@ -20,6 +20,7 @@ class Watcher extends EventEmitter {
     }
 
     async start() {
+        await fs.rm('dist', { recursive: true, force: true });
         const START = Date.now();
         const rollc = await loadConfigFile(path.resolve(__dirname, '../rollup.config.js'));
         // const bundle = await rollup.rollup(rollc.options[1]);
@@ -47,6 +48,12 @@ class Watcher extends EventEmitter {
         this.startWatcher('./src/**/*.html', makeHTML.bind(null, htmlCompileOptions));
 
         log(Date.now() - START, 'watching');
+
+        Promise.all([
+            fs.symlink(path.resolve('assets'), 'dist/assets', 'dir'),
+            fs.copyFile('main.js', 'dist/main.js'),
+            fs.copyFile('package.json', 'dist/package.json'),
+        ]);
     }
 
     startWatcher(paths, make) {

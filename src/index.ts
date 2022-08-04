@@ -10,7 +10,6 @@ import {
 import { initStatusbar } from 'src/plugins/Bar';
 import 'in-plugin/sse';
 
-const word: string = 'Hello world';
 
 async function onReady() {
     initControls();
@@ -22,7 +21,6 @@ async function onReady() {
     const $modal = $('#more-modal') as any;
     $moreBtn.addEventListener('click', () => $modal.showModal());
 
-    console.log(word, { light, dark });
     console.log(mdv.getVersions());
 
     const $root = $('#container-root');
@@ -59,7 +57,7 @@ function initDocRenderer($root: HTMLElement) {
     });
     const $home = $('.home-page');
     const $doc = $('#doc-container');
-    const PATHNAME_HOME = '/dist/index.html';
+    const PATHNAME_HOME = '/index.html';
     let unwantedGoBack = false;
     let lastDisplayURL: string; // fix unexpected popstate event fired by hash change
     const renderBody = async (ev?: PopStateEvent) => {
@@ -111,7 +109,6 @@ function initDocRenderer($root: HTMLElement) {
 document.addEventListener('DOMContentLoaded', onReady);
 window.addEventListener('contextmenu', mdv.openContextMenu);
 window.addEventListener('keyup', (ev) => {
-    console.log(ev.code, ev.ctrlKey, ev.altKey);
     if (ev.ctrlKey && ev.code === 'KeyF') {
         const selectedText = window.getSelection()?.toString();
         mdv.findInPage(selectedText || '');

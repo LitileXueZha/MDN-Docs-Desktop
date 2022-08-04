@@ -5,9 +5,11 @@ import json from '@rollup/plugin-json';
 import alias from '@rollup/plugin-alias';
 import ts from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import virtual from '@rollup/plugin-virtual';
 import image from '@rollup/plugin-image';
+import replace from '@rollup/plugin-replace';
 
 
 const IN_PRODUCTION = process.env.NODE_ENV === 'production';
@@ -28,9 +30,13 @@ const ELECTRON = defineConfig({
         chunkFileNames: '[name]-[hash].js',
         format: 'cjs',
         interop: 'auto',
-        sourcemap: 'inline',
+        sourcemap: IN_PRODUCTION ? undefined : 'inline',
     },
     plugins: [
+        replace({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+            __DEV__: String(!IN_PRODUCTION),
+        }),
         alias({
             entries: [
                 { find: 'e', replacement: path.resolve(__dirname, 'electron') },
@@ -39,6 +45,7 @@ const ELECTRON = defineConfig({
         nodeResolve(),
         json(),
         image(),
+        IN_PRODUCTION && terser(),
     ],
 });
 const JS = defineConfig({
@@ -53,9 +60,13 @@ const JS = defineConfig({
         entryFileNames: 'js/[name].js',
         chunkFileNames: 'js/[name]-[hash].js',
         format: 'es',
-        sourcemap: 'inline',
+        sourcemap: IN_PRODUCTION ? undefined : 'inline',
     },
     plugins: [
+        replace({
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+            __DEV__: String(!IN_PRODUCTION),
+        }),
         virtual({
             'in-plugin/sse': IN_PRODUCTION ? '' : fs.readFileSync('src/sse.js', 'utf-8'),
         }),
@@ -63,6 +74,7 @@ const JS = defineConfig({
         nodeResolve(),
         json(),
         ts({ tsconfig: 'src/tsconfig.json' }),
+        IN_PRODUCTION && terser(),
     ],
     // perf: true,
     onwarn(warnings, warn) {

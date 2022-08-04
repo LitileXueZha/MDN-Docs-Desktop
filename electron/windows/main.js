@@ -6,7 +6,7 @@ import aps from 'e/modules/AppSettings';
 class MainWindow {
     constructor() {
         this.ID = 'main';
-        this.URL = 'mdv://internal-files/dist/index.html';
+        this.URL = 'mdv://internal-files/index.html';
         this.win = null;
     }
 

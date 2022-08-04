@@ -63,3 +63,4 @@ declare interface Window {
 }
 declare const mdv: IMDV;
 declare module 'marked';
+declare const __DEV__: boolean;

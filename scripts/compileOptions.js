@@ -1,3 +1,5 @@
+const IN_PRODUCTION = process.env.NODE_ENV === 'production';
+
 exports.cssCompileOptions = {
     input: {
         index: 'src/index.scss',
@@ -6,12 +8,12 @@ exports.cssCompileOptions = {
     },
     output: {
         file: 'dist/css/[name].css',
-        style: 'compressed',
+        style: IN_PRODUCTION ? 'compressed' : 'expanded',
         loadPaths: [
             'node_modules/@primer/primitives/dist/scss',
             'node_modules/highlight.js/styles',
         ],
-        sourceMap: true,
+        sourceMap: IN_PRODUCTION ? undefined : true,
     },
 };
 

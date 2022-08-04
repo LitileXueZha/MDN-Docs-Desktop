@@ -27,7 +27,7 @@ class ContextMenu {
     }
 
     build() {
-        this.current = Menu.buildFromTemplate([
+        const tplMenus = [
             { label: '返回', click: this._onGoBack, enabled: false },
             { label: '前进', click: this._onGoForward, enabled: false },
             { label: '刷新', role: 'reload', accelerator: 'CmdOrCtrl+R' },
@@ -37,13 +37,20 @@ class ContextMenu {
             },
             { label: '网页内查找', accelerator: 'CmdOrCtrl+F', click: this._onFindWidget },
             { label: '在 MDN 上查看', icon: this.icon, click: this._onMDNForward },
-            { type: 'separator' },
-            { label: '开发者菜单', enabled: false },
-            { label: '检查', role: 'toggleDevTools', accelerator: 'F12' },
-            { label: '设置', click: this._onOpenSetting },
-            { label: '重新启动', click: this._onRelaunch },
-            { label: '退出', role: 'quit' },
-        ]);
+        ];
+
+        if (__DEV__) {
+            this.current = Menu.buildFromTemplate(tplMenus.concat([
+                { type: 'separator' },
+                { label: '开发者菜单', enabled: false },
+                { label: '检查', role: 'toggleDevTools' },
+                { label: '设置', click: this._onOpenSetting },
+                { label: '重新启动', click: this._onRelaunch },
+                { label: '退出', role: 'quit' },
+            ]));
+            return;
+        }
+        this.current = Menu.buildFromTemplate(tplMenus);
     }
 
     onPopup = (ev) => {

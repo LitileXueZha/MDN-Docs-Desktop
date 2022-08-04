@@ -9,7 +9,7 @@ import aps from 'e/modules/AppSettings';
 class FindWidgetWindow {
     constructor() {
         this.ID = 'find-widget';
-        this.URL = 'mdv://internal-files/dist/find-widget.html';
+        this.URL = 'mdv://internal-files/find-widget.html';
         this.win = null;
         this._closeTimer = null;
     }

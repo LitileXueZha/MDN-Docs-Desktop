@@ -43,7 +43,7 @@ export function initMenus() {
 export function doInWorker<T>(task: string, payload: any): Promise<T> {
     return new Promise((resolve, reject) => {
         if (!window.worker) {
-            window.worker = new Worker('/dist/js/web-worker.js', { type: 'module' });
+            window.worker = new Worker('/js/web-worker.js', { type: 'module' });
         }
         // Once listener
         const onMessage = (e: MessageEvent) => {
