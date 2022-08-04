@@ -1,8 +1,23 @@
+![Screenshot Index](docs/screenshot.png)
+
 # MDN Docs Desktop
 
 Offline MDN docs viewer.
 
-![Screenshot Index](docs/screenshot-index.png)
+## Install
+
+1. install electron
+2. download `app.asar`
+
+I'm too lazy to create application package for different platform, so you need to download Electron's [prebuilt binaries](https://github.com/electron/electron/releases).
+
+Download `app.asar` from latest [releases](https://github.com/LitileXueZha/MDN-Docs-Desktop/releases), then put it into your electron install directory `resources/app`.
+
+**Make sure** your downloaded electron version is matched with the release `app.asar` required version.
+
+Then you can try the optional step, [Customization](#customization).
+
+Happy for using ~~~
 
 ## About
 
