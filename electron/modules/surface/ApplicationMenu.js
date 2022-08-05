@@ -125,6 +125,7 @@ class ApplicationMenu {
         ];
         dialog.showMessageBox(win, {
             type: 'info',
+            title: 'MDN Docs Desktop',
             message: 'MDN Docs Desktop',
             detail: messages.join('\n'),
             defaultId: 1,
@@ -157,13 +158,14 @@ class ApplicationMenu {
                     if (isNewVersion(tag_name, currVer)) {
                         dialog.showMessageBox(win, {
                             type: 'info',
-                            message: '有新的版本',
+                            title: 'MDN Docs Desktop',
+                            message: '发现了一个新的版本',
                             detail: `v${currVer} → ${tag_name}`,
-                            buttons: ['更新'],
+                            buttons: ['取消', '更新'],
                             noLink: true,
                             cancelId: 2,
                         }).then(({ response }) => {
-                            if (response === 0) {
+                            if (response === 1) {
                                 console.log('updating');
                             }
                         });
@@ -171,6 +173,7 @@ class ApplicationMenu {
                     }
                     dialog.showMessageBox(win, {
                         type: 'info',
+                        title: 'MDN Docs Desktop',
                         message: 'MDN Docs Desktop',
                         detail: '暂无更新',
                         noLink: true,

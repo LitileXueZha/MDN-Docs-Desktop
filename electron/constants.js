@@ -29,3 +29,5 @@ export const COLORS = {
         color: '#c9d1d9',
     },
 };
+
+export const TITLE = 'MDN Docs Desktop';

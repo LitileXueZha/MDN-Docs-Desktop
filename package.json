@@ -31,7 +31,7 @@
   "homepage": "https://github.com/LitileXueZha/MDN-Docs-Desktop#readme",
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.9",
-    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-image": "^2.1.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.1.3",

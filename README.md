@@ -6,8 +6,8 @@ Offline MDN docs viewer.
 
 ## Install
 
-1. install electron
-2. download `app.asar`
+1. Install electron
+2. Download `app.asar`
 
 I'm too lazy to create application package for different platform, so you need to download Electron's [prebuilt binaries](https://github.com/electron/electron/releases).
 
@@ -42,4 +42,38 @@ rcedit electron.exe
     --set-version-string "ProductName" "MDN Docs Desktop"
     --set-version-string "ProductVersion" ""
 mv electron.exe MDN-Docs-Desktop.exe
+```
+
+### Linux
+
+1. Rename `electron` to `mdn-docs-desktop`
+2. Download `assets/mdn-web-doc.png`
+3. Add `mdn-docs-desktop.desktop`
+
+Assume your path is like this:
+
+```
+~/Downloads/electron
+├── resources
+│   └── app.asar
+├── ...
+├── mdn-docs-desktop
+├── mdn-web-docs.png
+```
+
+Create a `.desktop` file in `~/.local/share/applications` or `/usr/share/applications`.
+
+```
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=MDN Docs Desktop
+Exec=/home/yourname/Downloads/electron/mdn-docs-desktop
+Icon=/home/yourname/Downloads/electron/mdn-web-docs.png
+MimeType=image/x-foo;
+Actions=new-window
+
+[Desktop Action new-window]
+Exec=/home/yourname/Downloads/electron/mdn-docs-desktop
+Name=New Window
 ```

@@ -25,6 +25,7 @@ class MainWindow {
             frame: false,
             useContentSize: true,
             backgroundColor: background,
+            icon: path.join(__dirname, 'assets/mdn-web-docs.png'),
             // titleBarOverlay: true,
             // titleBarOverlay: {
             //     color: '#2f3241',

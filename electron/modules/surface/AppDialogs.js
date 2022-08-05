@@ -29,7 +29,7 @@ class Dialogs {
                     type: 'info',
                     defaultId: 1,
                     buttons: ['复制', '确定'],
-                    // title: 'MDN Docs Desktop',
+                    title: 'MDN Docs Desktop',
                     message: 'MDN Docs Desktop',
                     detail: versions,
                     noLink: true,
@@ -57,6 +57,7 @@ class Dialogs {
             case ID_PICK_DIRECTORY: {
                 const win = BrowserWindow.fromWebContents(ev.sender);
                 return dialog.showOpenDialog(win, {
+                    title: 'MDN Docs Desktop',
                     properties: ['openDirectory'],
                 });
             }

@@ -13,6 +13,7 @@ process.on('uncaughtException', (error) => {
     dialog.showErrorBox('uncaughtException', error.stack);
     // app.quit();
 });
+process.on('unhandledRejection', console.error);
 function log() {}
 if (__DEV__) {
     process.env.DEBUG = '*';
@@ -35,16 +36,18 @@ export async function startup() {
         }
     });
     // app.addRecentDocument(path.join(__dirname, '../index.html'));
-    app.setUserTasks([
-        {
-            title: '新窗口',
-            description: '新建一个窗口',
-            program: process.execPath,
-            arguments: app.getAppPath(),
-            iconPath: process.execPath,
-            iconIndex: 0,
-        },
-    ]);
+    if (process.platform === 'win32') {
+        app.setUserTasks([
+            {
+                title: '新窗口',
+                description: '新建一个窗口',
+                program: process.execPath,
+                arguments: app.getAppPath(),
+                iconPath: process.execPath,
+                iconIndex: 0,
+            },
+        ]);
+    }
     app.setName('MDN Docs Desktop');
     ipcMain.on('error', console.log);
 

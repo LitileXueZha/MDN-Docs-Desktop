@@ -57,6 +57,7 @@ class ContentProvider {
         // - /docs/web/html
         dialog.showMessageBox(win, {
             type: 'error',
+            title: 'MDN Docs Desktop',
             message: `ContentProvider 未支持文档路径\n${new URL(url).pathname}\n\nError_${this._findError}`,
             noLink: true,
         });

@@ -35,6 +35,7 @@ class RepoManager {
         const win = BrowserWindow.fromWebContents(ev.sender);
         const action = await dialog.showMessageBox(win, {
             type: 'info',
+            title: 'MDN Docs Desktop',
             message: '默认保存到下载目录',
             detail: `具体位置为\n${this.PATH}`,
             buttons: ['确定', '取消'],

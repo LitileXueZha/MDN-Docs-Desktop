@@ -70,10 +70,12 @@ const JS = defineConfig({
         virtual({
             'in-plugin/sse': IN_PRODUCTION ? '' : fs.readFileSync('src/sse.js', 'utf-8'),
         }),
+        // IMPORTANT: this typescript plugin must place before  '@rollup/plugin-node-resolve'
+        // otherwise will occur some errors of "Circular dependencies"
+        ts({ tsconfig: 'src/tsconfig.json' }),
         commonjs(),
         nodeResolve(),
         json(),
-        ts({ tsconfig: 'src/tsconfig.json' }),
         IN_PRODUCTION && terser(),
     ],
     // perf: true,
