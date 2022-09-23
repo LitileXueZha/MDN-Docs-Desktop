@@ -15,7 +15,6 @@ class Builder {
         await Builder.rmrf('dist');
         const rollc = await loadConfigFile(path.resolve(__dirname, '../rollup.config.js'));
 
-        rollc.warnings.flush();
         for (const option of rollc.options) {
             const START = Date.now();
             const bundle = await rollup.rollup(option);
@@ -24,6 +23,7 @@ class Builder {
 
             const id = Object.values(option.input)[0].indexOf('electron') > -1 ? 'ELECTRON' : 'JS';
             log(Date.now() - START, 'build %c %c files', id, info[0].output.length);
+            rollc.warnings.flush();
         }
 
         const { makeCSS, makeHTML } = require('./make-utils.js');

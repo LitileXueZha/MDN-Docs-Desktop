@@ -45,7 +45,6 @@
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "debug": "^4.3.3",
-    "electron": "^17.4.7",
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
@@ -57,8 +56,10 @@
   },
   "dependencies": {
     "@primer/primitives": "^7.5.0",
+    "electron": "^17.4.7",
     "front-matter": "^4.0.2",
     "highlight.js": "^11.5.0",
+    "js-yaml": "^4.1.0",
     "marked": "^4.0.12"
   },
   "config": {

@@ -66,13 +66,13 @@ async function onSearchIndex(params: any, done: Function) {
     done(result);
 }
 
+/**
+ * Detect code language:
+ * - `brush: {name}`       Old MDN formats
+ * - `language-{name}`     Added by 'marked'
+ */
+const REG_LANGUAGE = /(?:brush:\s*|language-)([\w+-]+)/i;
 function onHighlightCode(codes: any[], done: Function) {
-    /**
-     * Detect code language:
-     * - `brush: {name}`       Old MDN formats
-     * - `language-{name}`     Added by 'marked'
-     */
-    const REG_LANGUAGE = /(?:brush:\s*|language-)([\w+-]+)/i;
     const result = [];
 
     for (let i = 0, len = codes.length; i < len; i++) {

@@ -19,7 +19,7 @@ code {
     background-color: var(--color-neutral-muted);
     font-size: 0.875em;
     font-family: $font-family-code;
-    border-radius: 4px;
+    border-radius: $radius;
     vertical-align: text-bottom;
 }
 
@@ -79,7 +79,7 @@ i.mdv-icon {
         padding: 4px 24px 4px 6px;
         font: inherit;
         border: 1px solid var(--bg-select);
-        border-radius: 4px;
+        border-radius: $radius;
         background-color: var(--bg-select);
         appearance: none;
         outline: none;

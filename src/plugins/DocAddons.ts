@@ -111,12 +111,18 @@ export function externalLinkTip(render: DocRender) {
 
         const {
             top, bottom, height, left,
+            right,
         } = this.getBoundingClientRect();
+        const { clientWidth, clientHeight } = document.documentElement;
         let topTip = top + height + 8;
-        if (top > document.documentElement.clientHeight / 2) {
+        let leftTip = e.pageX;
+        if (top > clientHeight / 2) {
             topTip = top - $tip.clientHeight;
         }
-        $tip.style.left = `${e.pageX - 24}px`;
+        if ($tip.offsetWidth + e.pageX > clientWidth) {
+            leftTip = clientWidth - $tip.offsetWidth;
+        }
+        $tip.style.left = `${leftTip - 24}px`;
         $tip.style.top = `${topTip}px`;
     }
     function leave() {

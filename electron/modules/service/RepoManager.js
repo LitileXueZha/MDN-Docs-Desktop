@@ -103,7 +103,7 @@ class RepoManager {
             bar.message.loading('正在同步仓库');
             total += 1;
             // git pull
-            const cp = spawn('git', ['-C', gitDir, 'pull', '--ff']);
+            const cp = spawn('git', ['-C', gitDir, 'pull', '--ff', '-q', '-p']);
             cp.stderr.on('data', this._onStderr);
             cp.stdout.on('data', this._onStdout);
             cp.on('exit', handleClose);

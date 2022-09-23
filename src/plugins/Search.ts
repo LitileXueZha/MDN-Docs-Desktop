@@ -22,7 +22,7 @@ class Search {
     }
 
     bindInputEl(el: HTMLInputElement) {
-        el.addEventListener('input', debounce(async (ev: Event) => {
+        const startSearch = debounce(async (ev: Event) => {
             this.init();
             if (this.pending) return;
 
@@ -55,7 +55,8 @@ class Search {
                     this.pending = false;
                 }
             }
-        }));
+        });
+        el.addEventListener('input', startSearch);
         // el.addEventListener('focus', () => {
         //     this.setPositionAt(el);
         //     el.select();
