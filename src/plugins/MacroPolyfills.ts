@@ -77,4 +77,13 @@ export default {
     Experimental_Inline() {
         return '<svg class="mdv-icon"><title>Experimental</title><use xlink:href="#ion-flask" /></svg>';
     },
+    Deprecated_Inline() {
+        return '<svg class="mdv-icon"><title>Deprecated</title><use xlink:href="#ion-trash"/></svg>';
+    },
+    Deprecated_Header() {
+        const desc = 'This feature is no longer recommended. Though some browsers might still support it, '
+            + 'it may have already been removed from the relevant web standards, may be in the process of being dropped, '
+            + 'or may only be kept for compatibility purposes. Avoid using it, and update existing code if possible.';
+        return `<div class="deprecated"><p class="title">${this.Deprecated_Inline()}<b>Deprecated</b></p><p class="desc">${desc}</p></div>`;
+    },
 } as any;

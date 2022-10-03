@@ -91,6 +91,15 @@ class Search {
                 // Bubble up to `this.$body.onclick` and hide
                 (this.$body.children[this.selectIndex] as HTMLElement).click();
                 el.blur();
+                return;
+            }
+            if (keyEnter && this.$body.classList.contains('hidden')) {
+                startSearch();
+                return;
+            }
+            const keyEsc = ev.key === 'Escape';
+            if (keyEsc) {
+                el.blur();
             }
         });
     }

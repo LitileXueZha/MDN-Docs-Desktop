@@ -115,4 +115,23 @@ table {
     border-radius: 4px;
 }
 
+.deprecated {
+    margin: 1em 0;
+    padding: 8px $padding;
+    background-color: var(--color-danger-subtle);
+    border-radius: $radius;
+
+    .mdv-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 8px;
+    }
+    .title { margin: 0 }
+    .desc {
+        margin: 8px 0 0 20px+8;
+        font-size: $font-size-small;
+        overflow: hidden;
+    }
+}
+
 }

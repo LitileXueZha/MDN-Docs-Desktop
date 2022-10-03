@@ -27,7 +27,11 @@ class SearchIndex {
                 this.data.set(id, item);
             }
             // Different translations with the same title
-            item[locale] = url;
+            if (!item[locale]) {
+                item[locale] = [];
+            }
+            // Different urls (document) may have the same title
+            item[locale].push(url);
         }
     }
 
@@ -74,9 +78,11 @@ class SearchIndex {
             const urls = this.data.get(key.id);
             if (urls) {
                 // May be in english
-                const url = urls[locale] || urls['en-us'];
-                if (url) {
-                    result.push({ title: key.mark, url });
+                const links = urls[locale] || urls['en-us'];
+                if (links) {
+                    for (const url of links) {
+                        result.push({ title: key.mark, url });
+                    }
                 }
             }
             if (result.length >= this.MAX) {
