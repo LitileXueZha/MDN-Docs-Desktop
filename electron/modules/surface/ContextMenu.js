@@ -43,8 +43,8 @@ class ContextMenu {
             this.current = Menu.buildFromTemplate(tplMenus.concat([
                 { type: 'separator' },
                 { label: '开发者菜单', enabled: false },
-                { label: '检查', role: 'toggleDevTools' },
-                { label: '设置', click: this._onOpenSetting },
+                { label: '检查', role: 'toggleDevTools', accelerator: 'F12' },
+                { label: '设置', accelerator: 'F1', click: this._onOpenSetting },
                 { label: '重新启动', click: this._onRelaunch },
                 { label: '退出', role: 'quit' },
             ]));

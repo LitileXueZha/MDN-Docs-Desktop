@@ -34,7 +34,14 @@ const exposedAPIs = {
         return process.versions;
     },
     openContextMenu() {
-        ipcRenderer.send(IPC_CONTEXT_MENU);
+        const selectedText = window.getSelection()?.toString();
+        const { tagName, isContentEditable } = document.activeElement;
+        const isInput = tagName === 'INPUT' || tagName === 'TEXTAREA';
+        const data = {
+            selectedText,
+            editable: isInput || isContentEditable,
+        };
+        ipcRenderer.send(IPC_CONTEXT_MENU, data);
     },
     setWindow(action) {
         ipcRenderer.send(IPC_CONTROL_BUTTONS, action);

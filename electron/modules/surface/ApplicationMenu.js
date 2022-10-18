@@ -13,8 +13,8 @@ class ApplicationMenu {
 
     build() {
         const home = Menu.buildFromTemplate([
-            { label: '回到首页', click: this._onGoHome },
-            { label: '设置', click: this._onOpenSetting },
+            { label: '回到首页', accelerator: 'CmdOrCtrl+`', click: this._onGoHome },
+            { label: '设置', accelerator: 'F1', click: this._onOpenSetting },
             { type: 'separator' },
             { label: '重新启动', click: this._onRelaunch },
             { label: '退出', role: 'quit' },
@@ -46,15 +46,16 @@ class ApplicationMenu {
             { label: '去 MDN 仓库上提出 issue', click: this._onReportIssue },
         ]);
         const help = Menu.buildFromTemplate([
-            { label: 'README', click: this._onReadme },
+            { label: 'MDN Docs Desktop 项目', click: this._onReadme },
             { label: 'MDN 官网', click: this._onMDN },
             { type: 'separator' },
             { label: '开发者工具', role: 'toggleDevTools', accelerator: 'CmdOrCtrl+Shift+I' },
+            { role: 'toggleDevTools', accelerator: 'F12', visible: false },
             { label: '检查更新', click: this._checkUpdate },
             { label: '关于', click: this._openAbout },
         ]);
         const allMenus = Menu.buildFromTemplate([
-            { label: '首页', submenu: home },
+            { label: '文件', submenu: home },
             { label: 'Web 技术', submenu: web },
             { label: '教程', submenu: guides },
             { label: '反馈', submenu: feedback },

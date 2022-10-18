@@ -109,11 +109,24 @@ function initDocRenderer($root: HTMLElement) {
 document.addEventListener('DOMContentLoaded', onReady);
 window.addEventListener('contextmenu', mdv.openContextMenu);
 window.addEventListener('keyup', (ev) => {
-    if (ev.ctrlKey && ev.code === 'KeyF') {
-        const selectedText = window.getSelection()?.toString();
-        mdv.findInPage(selectedText || '');
+    switch (ev.code) {
+    case 'KeyF': {
+        if (ev.ctrlKey) {
+            const selectedText = window.getSelection()?.toString();
+            mdv.findInPage(selectedText || '');
+        }
+        break;
     }
-    if (ev.code === 'Slash' || ev.code === 'NumpadDivide') {
+    case 'KeyR':
+        if (ev.ctrlKey) {
+            window.location.reload();
+        }
+        break;
+    case 'Slash':
+    case 'NumpadDivide':
         $('#nav-input').focus();
+        break;
+    default:
+        break;
     }
 });
