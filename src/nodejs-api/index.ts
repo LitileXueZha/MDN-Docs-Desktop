@@ -12,7 +12,7 @@ async function onReady() {
 
     let data: any;
     try {
-        data = await fetch('/nodejs-api1.json');
+        data = await fetch('/nodejs-api.json');
         data = await data.json();
     } catch (err) {
         // Maybe the application not bundle with nodejs-api data

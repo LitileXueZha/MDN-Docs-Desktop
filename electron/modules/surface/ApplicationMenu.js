@@ -148,7 +148,7 @@ class ApplicationMenu {
 
     _checkUpdate = (ev, win) => {
         // See https://docs.github.com/en/rest/releases/releases#get-the-latest-release
-        const REPO = 'LitileXueZha/traceback.js';
+        const REPO = 'LitileXueZha/MDN-Docs-Desktop';
         const RELEASE_API_URL = `https://api.github.com/repos/${REPO}/releases/latest`;
         const req = net.request(RELEASE_API_URL);
 
