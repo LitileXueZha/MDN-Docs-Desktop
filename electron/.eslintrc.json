@@ -12,12 +12,13 @@
         "sourceType": "module"
     },
     "rules": {
-        "indent": ["error", 4, {"SwitchCase":1}],
+        "indent": ["error", 4],
         "no-restricted-syntax": "off",
         "no-use-before-define": ["error", {"functions": false}],
         "no-new": "off",
         "no-underscore-dangle": "off",
         "no-multiple-empty-lines": ["error", {"max": 2}],
+        "class-methods-use-this": "off",
         "lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
         "import/no-extraneous-dependencies": "off"
     }

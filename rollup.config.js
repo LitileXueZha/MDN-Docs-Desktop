@@ -17,7 +17,7 @@ const DIR_OUTPUT = path.join(__dirname, 'dist');
 
 const ELECTRON = defineConfig({
     external: [
-        /(path|fs|stream|child_process|events|readline|worker_threads|debug)/,
+        'fs/promises',
         'electron', // DO NOT USE REGEXP, WILL BREAK DYNAMIC IMPORT
     ],
     input: {
@@ -30,7 +30,7 @@ const ELECTRON = defineConfig({
         chunkFileNames: '[name]-[hash].js',
         format: 'cjs',
         interop: 'auto',
-        sourcemap: IN_PRODUCTION ? undefined : 'inline',
+        sourcemap: IN_PRODUCTION ? undefined : true,
     },
     plugins: [
         replace({
