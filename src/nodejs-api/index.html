@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {{Heads}}
+    <link rel="stylesheet" href="/css/nodejs-api.css">
+</head>
+<body>
+    <div class="titlebar">
+        {{Logo}}
+        <div class="menu-list">
+            <div class="title">Node.js 文档</div>
+        </div>
+        <div class="control-buttons">{{Controls}}</div>
+    </div>
+    <main class="container">
+        <div class="api">
+            <div id="indexes">
+                <div class="fixed">
+                    <div class="banner">
+                        <img class="mdv-icon" src="/assets/nodejs.png" width="20" height="20" />
+                        <h3 class="title">Node.js</h3>
+                        <span class="node-version" title="当前文档使用的nodejs版本">v1.0</span>
+                    </div>
+                    <ul class="api-list">
+                        <li class="api-item">About this documentation</li>
+                        <li class="api-item">Usage and example</li>
+                        <li class="api-item divider"></li>
+                        <li class="api-item">HTTP</li>
+                        <li class="api-item">DNS</li>
+                        <li class="api-item">C/C++ addons with Node-API</li>
+                        <li class="api-item divider"></li>
+                        <li class="api-item">
+                            <a href="https://github.com/nodejs/node">Code repository and issue tracker</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="content">
+                <p id="no-mini-version" class="mdv-alert">💔 文档的最小 Node.js 使用版本未知</p>
+                <div id="md-body">
+                    <h1>HTTP/2 - Demonstration <span id="mini-version">v1.0</span></h1>
+                    <div class="api_metadata"><span>Add in v1.0</span></div>
+                    <p>The node:http2 module provides an implementation of the HTTP/2 protocol. It can be accessed using:</p>
+                    <pre><code>const http2 = require('node:http2');</code></pre>
+                    <h2>Determining if crypto support is unavailable</h2>
+                    <p>这是一个示例页面。如果你一直看到这些内容，说明未打包 Node.js 文档数据。</p>
+                </div>
+            </div>
+            <div id="toc">
+                <p class="animals">🐌 🐌 🐑</p>
+                <ul class="list">
+                    <li class="item"><a href="#">Determining if crypto support is unavailable</a></li>
+                    <li class="item">
+                        <a href="#">Core API</a>
+                        <ul class="list">
+                            <li class="item"><a href="#">Server-side example</a></li>
+                            <li class="item">
+                                <a href="#">Class: Http2Stream</a>
+                                <ul class="list">
+                                    <li class="item">
+                                        <a href="#">Http2Stream Lifecycle</a>
+                                        <ul class="list">
+                                            <li class="item"><a href="#">Creation</a></li>
+                                            <li class="item"><a href="#">Destruction</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="item"><a href="#">Event: 'aborted'</a></li>
+                                    <li class="item"><a href="#">http2stream.respondWithFile(path[, headers[, options]])</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="item"><a href="#">Collecting HTTP/2 performance metrics</a></li>
+                    <li class="item"><a href="#">Note on :authority and host</a></li>
+                </ul>
+            </div>
+        </div>
+        {{ScrollTop}}
+    </main>
+
+    {{SVGIcons}}
+
+    <script src="/js/nodejs-api.js" type="module"></script>
+</body>
+</html>

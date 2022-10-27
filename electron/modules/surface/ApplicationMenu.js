@@ -4,6 +4,7 @@ import {
 } from 'electron';
 import { IPC_APPLICATION_MENU, IPC_OPEN_DIALOG } from 'e/constants';
 import aps from 'e/modules/AppSettings';
+import winNodejsApi from 'e/windows/nodejsApi';
 
 class ApplicationMenu {
     constructor() {
@@ -15,6 +16,7 @@ class ApplicationMenu {
         const home = Menu.buildFromTemplate([
             { label: '回到首页', accelerator: 'CmdOrCtrl+`', click: this._onGoHome },
             { label: '设置', accelerator: 'F1', click: this._onOpenSetting },
+            { label: 'Node.js 文档', click: () => winNodejsApi.create() },
             { type: 'separator' },
             { label: '重新启动', click: this._onRelaunch },
             { label: '退出', role: 'quit' },
@@ -50,9 +52,12 @@ class ApplicationMenu {
             { label: 'MDN 官网', click: this._onMDN },
             { type: 'separator' },
             { label: '开发者工具', role: 'toggleDevTools', accelerator: 'CmdOrCtrl+Shift+I' },
-            { role: 'toggleDevTools', accelerator: 'F12', visible: false },
             { label: '检查更新', click: this._checkUpdate },
             { label: '关于', click: this._openAbout },
+        ]);
+        const keymaps = Menu.buildFromTemplate([
+            { role: 'toggleDevTools', accelerator: 'F12' },
+            { role: 'reload', accelerator: 'F5' },
         ]);
         const allMenus = Menu.buildFromTemplate([
             { label: '文件', submenu: home },
@@ -60,6 +65,7 @@ class ApplicationMenu {
             { label: '教程', submenu: guides },
             { label: '反馈', submenu: feedback },
             { label: '帮助', submenu: help },
+            { label: '快捷键', visible: false, submenu: keymaps },
         ]);
         Menu.setApplicationMenu(allMenus);
         this.current = allMenus;

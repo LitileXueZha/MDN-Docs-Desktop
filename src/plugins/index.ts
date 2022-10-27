@@ -58,3 +58,43 @@ export function doInWorker<T>(task: string, payload: any): Promise<T> {
         window.worker.postMessage({ task, payload });
     });
 }
+
+export function initScrollTop($root: HTMLElement) {
+    const $sct = $('#scroll-top');
+    const sctObserver = new IntersectionObserver((entry) => {
+        if (entry[0].intersectionRatio > 0) {
+            $sct.style.visibility = 'hidden';
+        } else {
+            $sct.style.visibility = 'visible';
+        }
+    }, { root: $root });
+    sctObserver.observe($('#sct-observe-helper'));
+    $sct.addEventListener('click', () => {
+        $root.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    });
+}
+
+// TODO: memorized scroll positions
+export function enhancedScroll(this: HTMLElement | null) {
+    let { hash } = window.location;
+    if (!hash) this?.scrollTo(0, 0);
+    else {
+        hash = decodeURIComponent(hash);
+        // Enchance scroll behavior when click the title
+        requestAnimationFrame(() => $(hash)?.scrollIntoView());
+    }
+}
+
+export function initDialogs() {
+    const $dialogs = document.getElementsByTagName('dialog');
+    for (const $el of $dialogs) {
+        if ($el.classList.contains('modal')) {
+            $el.addEventListener('click', closeByOutsideClick);
+        }
+    }
+    function closeByOutsideClick(this: HTMLDialogElement, ev: MouseEvent) {
+        if (ev.target === this) {
+            this.close();
+        }
+    }
+}

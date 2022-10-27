@@ -2,6 +2,7 @@ const fs = require('fs/promises');
 const sass = require('sass');
 const { minify } = require('html-minifier-terser');
 const log = require('./log.js');
+const { buildDoc } = require('./nodejsAPIs.js');
 
 const fHandles = new Map();
 
@@ -144,5 +145,14 @@ async function makeCSS(compileOptions) {
     log(Date.now() - START, 'build %c %c modules', 'CSS', totalBuildFiles);
 }
 
+async function makeNodejs(compileOptions) {
+    const { version, input, output } = compileOptions;
+    const START = Date.now();
+    const jsondata = await buildDoc(version, input);
+    await fs.writeFile(output.file, JSON.stringify(jsondata));
+    log(Date.now() - START, 'build %c', output.file);
+}
+
 exports.makeCSS = makeCSS;
 exports.makeHTML = makeHTML;
+exports.makeNodejs = makeNodejs;

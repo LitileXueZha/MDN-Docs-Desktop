@@ -5,6 +5,7 @@ exports.cssCompileOptions = {
         index: 'src/index.scss',
         setting: 'src/setting/index.scss',
         'find-widget': 'src/find-widget/index.scss',
+        'nodejs-api': 'src/nodejs-api/index.scss',
     },
     output: {
         file: 'dist/css/[name].css',
@@ -22,9 +23,18 @@ exports.htmlCompileOptions = {
         index: 'src/index.html',
         setting: 'src/setting/index.html',
         'find-widget': 'src/find-widget/index.html',
+        'nodejs-api': 'src/nodejs-api/index.html',
     },
     template: 'src/_template.html',
     output: {
         file: 'dist/[name].html',
     },
+};
+
+exports.nodejsCompileOptions = {
+    input: undefined,
+    output: {
+        file: 'dist/nodejs-api.json',
+    },
+    version: 'v19.0.0',
 };

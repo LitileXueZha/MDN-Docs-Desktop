@@ -15,7 +15,7 @@
 <!-- :Heads: -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src http://localhost:8012; img-src * data:">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src http://localhost:8012 'self'; img-src * data:">
 <title>MDN Docs Desktop</title>
 <link rel="shortcut icon" href="/assets/favicon.ico" type="image/x-icon">
 <!-- :Heads: -->
@@ -64,6 +64,14 @@
 </div>
 <!-- :Controls_Close: -->
 
+<!-- :ScrollTop: -->
+<div id="scroll-top" style="visibility: hidden;" role="button">
+    <svg class="mdv-icon"><use xlink:href="#akar-top"></svg>
+</div>
+<div id="sct-observe-helper"></div>
+<!-- :ScrollTop: -->
+
+<!-- https://icon-sets.iconify.design/ -->
 <!-- :SVGIcons: -->
 <svg data-id="icons" class="hidden" xmlns="http://www.w3.org/2000/svg">
     <defs>

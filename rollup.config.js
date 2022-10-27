@@ -48,12 +48,14 @@ const ELECTRON = defineConfig({
         IN_PRODUCTION && terser(),
     ],
 });
+// MUST use output.manualChunks, otherwise the bundles are shits.
 const JS = defineConfig({
     input: {
         index: 'src/index.ts',
         setting: 'src/setting/index.ts',
         'web-worker': 'src/web-worker.ts',
         'find-widget': 'src/find-widget/index.ts',
+        'nodejs-api': 'src/nodejs-api/index.ts',
     },
     output: {
         dir: DIR_OUTPUT,
@@ -61,6 +63,7 @@ const JS = defineConfig({
         chunkFileNames: 'js/[name]-[hash].js',
         format: 'es',
         sourcemap: IN_PRODUCTION ? undefined : 'inline',
+        manualChunks: undefined,
     },
     plugins: [
         replace({

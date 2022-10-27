@@ -26,12 +26,13 @@ class Builder {
             rollc.warnings.flush();
         }
 
-        const { makeCSS, makeHTML } = require('./make-utils.js');
-        const { cssCompileOptions, htmlCompileOptions } = require('./compileOptions.js');
+        const { makeCSS, makeHTML, makeNodejs } = require('./make-utils.js');
+        const { cssCompileOptions, htmlCompileOptions, nodejsCompileOptions } = require('./compileOptions.js');
 
         await fs.mkdir('dist/css', { recursive: true });
         await makeCSS(cssCompileOptions);
         await makeHTML(htmlCompileOptions);
+        await makeNodejs(nodejsCompileOptions);
         await this.pack();
     }
 

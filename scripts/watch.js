@@ -2,12 +2,13 @@ const path = require('path');
 const fs = require('fs/promises');
 const EventEmitter = require('events');
 const http = require('http');
+const { spawn } = require('child_process');
 const rollup = require('rollup/dist/rollup.js');
 const loadConfigFile = require('rollup/dist/loadConfigFile.js');
 const chokidar = require('chokidar');
 const log = require('./log.js');
-const { makeCSS, makeHTML } = require('./make-utils.js');
-const { cssCompileOptions, htmlCompileOptions } = require('./compileOptions.js');
+const { makeCSS, makeHTML, makeNodejs } = require('./make-utils.js');
+const { cssCompileOptions, htmlCompileOptions, nodejsCompileOptions } = require('./compileOptions.js');
 
 
 const $ev = new EventEmitter();
@@ -35,6 +36,7 @@ class Watcher extends EventEmitter {
                 const id = watchFiles.find((s) => s?.indexOf('electron') > 0) ? 'ELECTRON' : 'JS';
                 log(ev.duration, 'build %c %c modules', id, watchFiles.length);
                 $ev.emit('livereload');
+                this.emit(id);
             } else if (ev.code === 'ERROR') {
                 console.error(ev.error);
                 $ev.emit('livereload', ev.error);
@@ -49,11 +51,38 @@ class Watcher extends EventEmitter {
 
         log(Date.now() - START, 'watching');
 
-        Promise.all([
+        await Promise.all([
+            makeNodejs(nodejsCompileOptions),
             fs.symlink(path.resolve('assets'), 'dist/assets', 'dir'),
             fs.copyFile('main.js', 'dist/main.js'),
             fs.copyFile('package.json', 'dist/package.json'),
         ]);
+        this.launchElectron();
+    }
+
+    launchElectron() {
+        let cp;
+        const binElecton = require('electron');
+        const cwd = path.resolve(__dirname, '..');
+        const kill = () => {
+            if (!cp || cp.killed) return;
+            if (process.platform !== 'win32') {
+                return cp.kill();
+            }
+            spawn('taskkill', ['/T', '/F', '/PID', cp.pid]);
+        }
+        const launch = () => {
+            kill();
+            cp = spawn(binElecton, ['dist'], { cwd, stdio: 'inherit' });
+            log(`launch ${binElecton} %c`, cp.pid);
+            this.once('ELECTRON', launch);
+        };
+        // JS compilation is more slowly than ELECTRON
+        this.once('JS', launch);
+        process.on('SIGINT', () => {
+            kill();
+            process.exit();
+        });
     }
 
     startWatcher(paths, make) {

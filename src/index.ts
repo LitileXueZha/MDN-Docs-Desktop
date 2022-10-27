@@ -1,13 +1,16 @@
 import light from '@primer/primitives/dist/js/colors/light';
 import dark from '@primer/primitives/dist/js/colors/dark';
 import $ from 'src/utils/selector';
-import { initControls, initMenus } from 'src/plugins';
+import {
+    enhancedScroll, initControls, initDialogs, initMenus, initScrollTop,
+} from 'src/plugins';
 import Search from 'src/plugins/Search';
 import DocRender from 'src/plugins/DocRender';
 import {
     tocH2, highlightCode, preferInterlink, absoluteAssets, externalLinkTip,
 } from 'src/plugins/DocAddons';
 import { initStatusbar } from 'src/plugins/Bar';
+import keymaps from 'src/plugins/Keymaps';
 import 'in-plugin/sse';
 
 
@@ -30,18 +33,8 @@ async function onReady() {
     searchIns.bindInputEl($('#search') as HTMLInputElement);
     searchIns.bindInputEl($('#nav-input') as HTMLInputElement);
 
-    const $sct = $('#scroll-top');
-    const sctObserver = new IntersectionObserver((entry) => {
-        if (entry[0].intersectionRatio > 0) {
-            $sct.style.visibility = 'hidden';
-        } else {
-            $sct.style.visibility = 'visible';
-        }
-    }, { root: $root });
-    sctObserver.observe($('#sct-observe-helper'));
-    $sct.addEventListener('click', () => {
-        $root.scrollTo(0, 0);
-    });
+    initScrollTop($root);
+    initDialogs();
 }
 
 function initDocRenderer($root: HTMLElement) {
@@ -69,6 +62,7 @@ function initDocRenderer($root: HTMLElement) {
         const { pathname, hash } = window.location;
         const urlPathname = decodeURIComponent(pathname).toLowerCase();
         if (urlPathname === lastDisplayURL) {
+            enhancedScroll.call($root);
             if (!hash) $root.scrollTo(0, 0);
             else {
                 // Enchance scroll behavior when click the title
@@ -94,7 +88,7 @@ function initDocRenderer($root: HTMLElement) {
                 window.history.replaceState({}, '', url);
             }
             lastDisplayURL = url;
-            $root.scrollTo(0, 0);
+            enhancedScroll.call($root);
             return;
         }
         unwantedGoBack = true;
@@ -108,25 +102,4 @@ function initDocRenderer($root: HTMLElement) {
 
 document.addEventListener('DOMContentLoaded', onReady);
 window.addEventListener('contextmenu', mdv.openContextMenu);
-window.addEventListener('keyup', (ev) => {
-    switch (ev.code) {
-    case 'KeyF': {
-        if (ev.ctrlKey) {
-            const selectedText = window.getSelection()?.toString();
-            mdv.findInPage(selectedText || '');
-        }
-        break;
-    }
-    case 'KeyR':
-        if (ev.ctrlKey) {
-            window.location.reload();
-        }
-        break;
-    case 'Slash':
-    case 'NumpadDivide':
-        $('#nav-input').focus();
-        break;
-    default:
-        break;
-    }
-});
+window.addEventListener('keyup', keymaps);

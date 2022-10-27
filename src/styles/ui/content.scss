@@ -38,10 +38,10 @@ a {
         text-decoration: underline;
     }
 
-    &[href^="http"] {
-        color: var(--color-danger-fg);
-        text-decoration: underline;
-    }
+    // &[href^="http"] {
+    //     color: var(--color-danger-fg);
+    //     text-decoration: underline;
+    // }
 }
 
 img {
@@ -95,7 +95,7 @@ table {
 }
 
 .external-icon {
-    margin: 0 4px 0 2px;
+    margin: -2px 4px 0 2px;
     width: 0.8em;
     height: 0.8em;
     vertical-align: middle;

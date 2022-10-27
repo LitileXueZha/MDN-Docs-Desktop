@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs/promises';
 import { protocol } from 'electron';
 import aps from 'e/modules/AppSettings';
+import { REG_DOC, REG_DOC_NODEJS } from 'e/constants';
 
 export const MDV_NAME = 'mdv';
 export const MDV_SCHEME = {
@@ -24,7 +25,7 @@ export function registerSchemeMDV() {
     // The project root === ./
     const DIR_ROOT = __dirname;
     const INDEX = path.join(DIR_ROOT, 'index.html');
-    const REG_DOC = /^\/([a-z-]+)\/docs/i;
+    const NODEJS_INDEX = path.join(DIR_ROOT, 'nodejs-api.html');
 
     protocol.registerFileProtocol(MDV_NAME, async (req, callback) => {
         const { url } = req;
@@ -51,6 +52,10 @@ export function registerSchemeMDV() {
                 const assetPath = pathname.replace('/docs', '');
 
                 filePath = path.join(docAssetsDir, 'files', assetPath);
+            } else if (REG_DOC_NODEJS.test(pathname)) {
+                await fs.access(filePath).catch(() => {
+                    filePath = NODEJS_INDEX;
+                });
             } else {
                 await fs.access(filePath).catch(() => {
                     // historyApiFallback

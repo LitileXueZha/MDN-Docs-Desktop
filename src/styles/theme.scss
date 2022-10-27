@@ -27,6 +27,7 @@
     color-scheme: light;
     @include primer-colors-light;
     @include colors-light;
+    --canvas-opacity: rgba(255,255,255, .75);
 }
 // highlight.js themes
 @import 'github';
@@ -35,6 +36,7 @@
         color-scheme: dark;
         @include primer-colors-dark;
         @include colors-dark;
+        --canvas-opacity: rgba(13,17,23, .75);
     }
     @import 'atom-one-dark';
 }

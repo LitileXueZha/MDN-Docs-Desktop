@@ -7,6 +7,7 @@ import mainWindow from 'e/windows/main';
 import { IPC_RELOAD } from 'e/constants';
 import aps from 'e/modules/AppSettings';
 import { MDV_SCHEME, registerSchemeMDV } from 'e/modules/SchemeMDV';
+import winman from 'e/modules/service/WindowManager';
 import { version } from '../package.json';
 
 process.on('uncaughtException', (error) => {
@@ -46,9 +47,26 @@ export async function startup() {
                 iconPath: process.execPath,
                 iconIndex: 0,
             },
+            {
+                title: 'Node.js 文档',
+                description: '打开 Node.js 文档窗口',
+                program: process.execPath,
+                arguments: `${app.getAppPath()} --open-nodejs-api`,
+                iconPath: process.execPath,
+                iconIndex: 0,
+            },
         ]);
     }
     app.setName('MDN Docs Desktop');
+    app.setAboutPanelOptions({
+        applicationName: 'MDN Docs Desktop',
+        applicationVersion: app.getVersion(),
+        copyright: 'MIT License, Copyright (c) litilexuezha',
+        authors: ['litilexuezha', 'other contributors'],
+        website: 'https://github.com/LitileXueZha/MDN-Docs-Desktop',
+    });
+    // 开机启动
+    // app.setLoginItemSettings(settings) macOS Windows
     ipcMain.on('error', console.log);
 
     protocol.registerSchemesAsPrivileged([MDV_SCHEME]);
@@ -56,6 +74,7 @@ export async function startup() {
     await aps.load();
     registerSchemeMDV();
     await mainWindow.startup();
+    await winman.open('main', true);
 
     import('./bootstrap-modules');
     aps.probeCommands();

@@ -1,47 +1,51 @@
 import path from 'path';
 import { BrowserWindow, ipcMain, shell } from 'electron';
-import { COLORS, IPC_RENDER } from 'e/constants';
+import {
+    COLORS, IPC_RENDER, REG_DOC, REG_DOC_NODEJS,
+} from 'e/constants';
 import aps from 'e/modules/AppSettings';
 
-class MainWindow {
+
+class NodejsApi {
     constructor() {
-        this.ID = 'main';
-        this.URL = 'mdv://internal-files/index.html';
+        this.ID = 'nodejs-api';
+        this.URL = 'mdv://internal-files/nodejs-api.html';
         this.win = null;
     }
 
-    async startup() {
-        if (!this.win) {
-            await this.create();
-        }
-        ipcMain.on('jump-to', this._onWillNavigate);
+    start() {
+    }
+
+    stop() {
     }
 
     async create() {
         const { background } = COLORS[aps.data.darkMode ? 'dark' : 'light'];
+        const current = BrowserWindow.getFocusedWindow();
+        let x; let
+            y;
+        if (!current.isMaximized()) {
+            const rect = current.getNormalBounds();
+            x = rect.x + 20;
+            y = rect.y + 20;
+        }
         const win = new BrowserWindow({
             width: 1132,
             height: 700,
+            x,
+            y,
             minWidth: 360,
             frame: false,
             useContentSize: true,
             backgroundColor: background,
-            icon: path.join(__dirname, 'assets/mdn-web-docs.png'),
-            // titleBarOverlay: true,
-            // titleBarOverlay: {
-            //     color: '#2f3241',
-            //     symbolColor: '#74b1be',
-            //     height: 32,
-            // },
-            // transparent: true,
             webPreferences: {
                 preload: path.join(__dirname, 'renderer.js'),
                 spellcheck: false,
                 enableWebSQL: false,
+                webgl: false,
             },
         });
 
-        // await win.loadURL('mdv://internal-files/index.html');
         await win.loadURL(this.URL);
         win.on('maximize', this._onMaximize);
         win.on('unmaximize', this._onUnmaximize);
@@ -62,7 +66,7 @@ class MainWindow {
         this.win.webContents.send(IPC_RENDER, 'win-unmax');
     };
 
-    _onWillNavigate = async (ev, url) => {
+    _onWillNavigate = (ev, url) => {
         if (url.startsWith('http')) {
             shell.openExternal(url);
             ev.preventDefault();
@@ -70,16 +74,19 @@ class MainWindow {
         }
         if (url.startsWith('mdv')) {
             const { pathname, hash } = new URL(url);
-
-            if (this.win.isDestroyed()) {
-                await this.create();
+            let inAppUrl = pathname;
+            if (REG_DOC.test(inAppUrl)) {
+                ipcMain.emit('jump-to', ev, url);
+                ev.preventDefault();
+                return;
             }
-            this.win.webContents.executeJavaScript(`history.pushState({},"","${pathname}${hash}");dispatchEvent(new Event('popstate'))`);
-            this.win.focus();
+            if (!REG_DOC_NODEJS.test(inAppUrl)) {
+                inAppUrl = `/nodejs-api${pathname}`;
+            }
+            this.win.webContents.executeJavaScript(`history.pushState({},"","${inAppUrl}${hash}");dispatchEvent(new Event('popstate'))`);
             ev.preventDefault();
         }
     };
 }
 
-
-export default new MainWindow();
+export default new NodejsApi();

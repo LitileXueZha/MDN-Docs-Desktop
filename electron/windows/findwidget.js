@@ -33,6 +33,7 @@ class FindWidgetWindow {
             y: y + 32 + 12,
             width: 370,
             height: 42,
+            type: 'toolbar',
             maxWidth: 370,
             maxHeight: 42,
             minWidth: 370,
@@ -62,9 +63,13 @@ class FindWidgetWindow {
 
     _onFind = async (ev, text, options) => {
         clearTimeout(this._closeTimer);
+        const parent = BrowserWindow.fromWebContents(ev.sender);
         if (!this.win || this.win.isDestroyed()) {
-            const parent = BrowserWindow.fromWebContents(ev.sender);
             await this.create(parent);
+        }
+        // Multi-window support
+        if (parent !== this.win && parent !== this.win.getParentWindow()) {
+            this.win.setParentWindow(parent);
         }
         this.win.show();
         // Set current searching text

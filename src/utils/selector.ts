@@ -1,3 +1,4 @@
+const REG_SHORTHAND = /^[#.][^\s#.*:,[>~+|]+$/;
 /**
  * Select one HTMLElement
  *
@@ -7,11 +8,13 @@
  * @param query css selectors
  */
 function selector(query: string) {
-    if (query[0] === '#') {
-        return document.getElementById(query.substring(1)) as HTMLElement;
-    }
-    if (query[0] === '.') {
-        return document.getElementsByClassName(query.substring(1))[0] as HTMLElement;
+    if (REG_SHORTHAND.test(query)) {
+        if (query[0] === '#') {
+            return document.getElementById(query.substring(1)) as HTMLElement;
+        }
+        if (query[0] === '.') {
+            return document.getElementsByClassName(query.substring(1))[0] as HTMLElement;
+        }
     }
 
     return document.querySelector(query) as HTMLElement;

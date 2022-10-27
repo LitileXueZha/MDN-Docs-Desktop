@@ -18,6 +18,14 @@ export const IPC_DETECT_LOCALES = 'ipc:detect-locales';
 export const IPC_DOWNLOAD_REPO = 'ipc:download-repository';
 export const IPC_UPDATE_REPO = 'ipc:update-repository';
 
+export const EV_WIN_MAIN_JUMP = 'event:main-window-jump-to';
+export const WINDOW = {
+    MAIN: 'main',
+    SETTING: 'setting',
+    NODEJS: 'nodejs-api',
+    FIND: 'find-widget',
+};
+
 // https://primer.style/primitives/colors
 export const COLORS = {
     light: {
@@ -31,3 +39,6 @@ export const COLORS = {
 };
 
 export const TITLE = 'MDN Docs Desktop';
+
+export const REG_DOC = /^\/([a-z-]+)\/docs/i;
+export const REG_DOC_NODEJS = /^\/nodejs-api/i;

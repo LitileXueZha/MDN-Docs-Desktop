@@ -9,6 +9,7 @@ class DocRender {
     title: string;
     _localeDocs: Map<string, any>;
     _addon: any;
+    [key: string]: any,
 
     constructor() {
         this._$refs = {};
