@@ -98,18 +98,18 @@ class AppSettings {
     _applySettingItem = (key) => {
         const value = this.data[key];
         switch (key) {
-            case 'darkMode':
-                nativeTheme.themeSource = value ? 'dark' : 'system';
-                break;
-            case 'contentDir':
-            case 'translateDir':
-                clearTimeout(this._$1timer);
-                this._$1timer = setTimeout(() => {
-                    this._deps.Locales.detect(true);
-                }, 10);
-                break;
-            default:
-                break;
+        case 'darkMode':
+            nativeTheme.themeSource = value ? 'dark' : 'system';
+            break;
+        case 'contentDir':
+        case 'translateDir':
+            clearTimeout(this._$1timer);
+            this._$1timer = setTimeout(() => {
+                this._deps.Locales.detect(true);
+            }, 10);
+            break;
+        default:
+            break;
         }
     };
 

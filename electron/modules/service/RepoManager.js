@@ -68,14 +68,14 @@ class RepoManager {
                     if (code === 0) {
                         const dir = path.join(this.PATH, name);
                         switch (name) {
-                            case 'content':
-                                aps.data.contentDir = dir;
-                                break;
-                            case 'translated-content':
-                                aps.data.translateDir = dir;
-                                break;
-                            default:
-                                break;
+                        case 'content':
+                            aps.data.contentDir = dir;
+                            break;
+                        case 'translated-content':
+                            aps.data.translateDir = dir;
+                            break;
+                        default:
+                            break;
                         }
                     }
                 });

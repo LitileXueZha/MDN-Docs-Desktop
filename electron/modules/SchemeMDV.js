@@ -53,9 +53,13 @@ export function registerSchemeMDV() {
 
                 filePath = path.join(docAssetsDir, 'files', assetPath);
             } else if (REG_DOC_NODEJS.test(pathname)) {
-                await fs.access(filePath).catch(() => {
-                    filePath = NODEJS_INDEX;
-                });
+                if (pathname.endsWith('.json')) {
+                    // Request for jsondata, should not try the index
+                } else {
+                    await fs.access(filePath).catch(() => {
+                        filePath = NODEJS_INDEX;
+                    });
+                }
             } else {
                 await fs.access(filePath).catch(() => {
                     // historyApiFallback

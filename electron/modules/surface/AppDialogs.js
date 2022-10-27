@@ -23,46 +23,41 @@ class Dialogs {
 
     _onOpen = (ev, type) => {
         switch (type) {
-            case ID_INFO_TEST: {
-                const versions = Object.keys(process.versions).map((k) => `${k}: ${process.versions[k]}`).join('\n');
-                dialog.showMessageBox(BrowserWindow.fromWebContents(ev.sender), {
-                    type: 'info',
-                    defaultId: 1,
-                    buttons: ['复制', '确定'],
-                    title: 'MDN Docs Desktop',
-                    message: 'MDN Docs Desktop',
-                    detail: versions,
-                    noLink: true,
-                });
-                break;
-            }
-            case ID_ABOUT_PANEL:
-                app.setAboutPanelOptions({
-                    applicationName: 'MDN',
-                    applicationVersion: app.getVersion(),
-                    copyright: '©litilexuezha',
-                });
-                app.showAboutPanel();
-                break;
-            case ID_SETTING_WINDOW:
-                settingWindow.create();
-                break;
-            default:
-                break;
+        case ID_INFO_TEST: {
+            const versions = Object.keys(process.versions).map((k) => `${k}: ${process.versions[k]}`).join('\n');
+            dialog.showMessageBox(BrowserWindow.fromWebContents(ev.sender), {
+                type: 'info',
+                defaultId: 1,
+                buttons: ['复制', '确定'],
+                title: 'MDN Docs Desktop',
+                message: 'MDN Docs Desktop',
+                detail: versions,
+                noLink: true,
+            });
+            break;
+        }
+        case ID_ABOUT_PANEL:
+            app.showAboutPanel();
+            break;
+        case ID_SETTING_WINDOW:
+            settingWindow.create();
+            break;
+        default:
+            break;
         }
     };
 
     _onOpenAsync = (ev, type) => {
         switch (type) {
-            case ID_PICK_DIRECTORY: {
-                const win = BrowserWindow.fromWebContents(ev.sender);
-                return dialog.showOpenDialog(win, {
-                    title: 'MDN Docs Desktop',
-                    properties: ['openDirectory'],
-                });
-            }
-            default:
-                break;
+        case ID_PICK_DIRECTORY: {
+            const win = BrowserWindow.fromWebContents(ev.sender);
+            return dialog.showOpenDialog(win, {
+                title: 'MDN Docs Desktop',
+                properties: ['openDirectory'],
+            });
+        }
+        default:
+            break;
         }
     };
 }

@@ -20,6 +20,7 @@
         "no-multiple-empty-lines": ["error", {"max": 2}],
         "class-methods-use-this": "off",
         "lines-between-class-members": ["error", "always", {"exceptAfterSingleLine": true}],
+        "prefer-destructuring": ["error", {"AssignmentExpression":{"array":false}}],
         "import/no-extraneous-dependencies": "off"
     }
 }

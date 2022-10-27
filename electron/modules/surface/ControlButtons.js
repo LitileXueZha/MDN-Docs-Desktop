@@ -15,20 +15,20 @@ class ControlButtons {
     onClick = (ev, action) => {
         const win = BrowserWindow.fromWebContents(ev.sender);
         switch (action) {
-            case 'max':
-                win.maximize();
-                break;
-            case 'min':
-                win.minimize();
-                break;
-            case 'close':
-                win.close();
-                break;
-            case 'restore':
-                win.restore();
-                break;
-            default:
-                break;
+        case 'max':
+            win.maximize();
+            break;
+        case 'min':
+            win.minimize();
+            break;
+        case 'close':
+            win.close();
+            break;
+        case 'restore':
+            win.restore();
+            break;
+        default:
+            break;
         }
     };
 
