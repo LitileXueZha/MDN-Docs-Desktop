@@ -1,8 +1,8 @@
 {
   "name": "mdn-docs-desktop",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
-  "description": "Offline MDN docs viewer",
+  "description": "Delightful offline MDN docs viewer",
   "main": "main.js",
   "scripts": {
     "start": "electron ./dist",

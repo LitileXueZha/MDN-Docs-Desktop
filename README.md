@@ -2,7 +2,7 @@
 
 # MDN Docs Desktop
 
-Offline MDN docs viewer.
+Delightful offline MDN docs viewer. And also built-in Node.js official documentation.
 
 ## Install
 
@@ -11,9 +11,7 @@ Offline MDN docs viewer.
 
 I'm too lazy to create application package for different platform, so you need to download Electron's [prebuilt binaries](https://github.com/electron/electron/releases).
 
-Download `app.asar` from latest [releases](https://github.com/LitileXueZha/MDN-Docs-Desktop/releases), then put it into your electron install directory `resources/app`.
-
-**Make sure** your downloaded electron version is matched with the release `app.asar` required version.
+Download `app.asar` from latest [releases](https://github.com/LitileXueZha/MDN-Docs-Desktop/releases), then put it into your electron install directory `resources/app`. **Make sure** your downloaded electron version is matched with the released `app.asar` required version.
 
 Then you can try the optional step, [Customization](#customization).
 
@@ -26,6 +24,8 @@ MDN web docs 是一个共建的网络学习平台，多年来一直是查询文�
 2022/03/01, Mozilla 发布了 [A new year, a new MDN](https://hacks.mozilla.org/2022/03/a-new-year-a-new-mdn/)，一个奇怪的 logo，糟糕体验的交互和排版设计，还有随后将会推出的 Plus 版本 😰😨😱
 
 MDN Docs Desktop 是一个离线的文档浏览器，依赖于内容仓库，对排版和交互进行了优化。
+
+2022/10/28 更新支持查看 Node.js 官网文档。主要是因为在写一个库的时候，频繁查文档看得都吐了，滚动滚到手抽筋，到底部了还没有 scroll-to-top，花点时间干脆直接内建本地浏览了。[预览图](docs/screenshot-nodejs-api.png)
 
 ## TODO
 
