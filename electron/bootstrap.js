@@ -20,6 +20,9 @@ if (__DEV__) {
     process.env.DEBUG = '*';
     process.env.DEBUG_COLORS = 1;
     log = require('debug')('log');
+    process.on('unhandledRejection', (reason) => {
+        dialog.showErrorBox('unhandledRejection', reason);
+    });
 }
 
 

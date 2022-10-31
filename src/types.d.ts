@@ -39,7 +39,8 @@ interface IMDV {
     setWindow(action: string): void;
     getWindow(): Promise<any>;
     openDialog(id: number): void;
-    openDialogAsync(id: number): Promise<any>;
+    pickDirectory(): Promise<any>;
+    openErrorBox(title: string, content?: string);
     openMenu(menuId: string, pos: {}): void;
     openSetting(): void;
     getSettings(): any;

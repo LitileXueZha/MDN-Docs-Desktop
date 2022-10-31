@@ -103,3 +103,11 @@ function initDocRenderer($root: HTMLElement) {
 document.addEventListener('DOMContentLoaded', onReady);
 window.addEventListener('contextmenu', mdv.openContextMenu);
 window.addEventListener('keyup', keymaps);
+if (__DEV__) {
+    window.addEventListener('error', (ev) => {
+        mdv.openErrorBox('Client error', ev.error.stack);
+    });
+    window.addEventListener('unhandledrejection', (ev) => {
+        mdv.openErrorBox('Client unhandledrejection', ev.reason);
+    });
+}

@@ -13,14 +13,14 @@ const NODE_DOC = process.env.NODE_DOC
     || path.join(__dirname, '../../..', 'node/doc/api');
 const GROUPS = {
     // General things, globals, more common use
-    0: ['documentation','synopsis','cli','globals','process','url'],
+    0: ['documentation','debugger','synopsis','cli','globals','process','url'],
     // Modules
     1: ['assert','async_hooks','buffer','child_process','cluster','console','crypto','dns',
         'errors','events','fs','http','http2','https','inspector','net','os','path',
         'perf_hooks','querystring','readline','repl','stream','string_decoder','timers',
         'tls','tty','dgram','util','vm','worker_threads','zlib'],
     // Deep guides, deprecated, less common use
-    2: ['deprecations','async_context','addons','n-api','embedding','corepack','debugger',
+    2: ['deprecations','async_context','addons','n-api','embedding','corepack',
         'diagnostics_channel','domain','intl','modules','esm','module','packages',
         'permissions','punycode','report','test','tracing','v8','wasi','webcrypto',
         'webstreams'],

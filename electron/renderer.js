@@ -52,8 +52,11 @@ const exposedAPIs = {
     openDialog(id) {
         ipcRenderer.send(IPC_OPEN_DIALOG, id);
     },
-    openDialogAsync(id) {
-        return ipcRenderer.invoke(IPC_OPEN_DIALOG, id);
+    pickDirectory() {
+        return ipcRenderer.invoke(IPC_OPEN_DIALOG, 4);
+    },
+    openErrorBox(title, content = '') {
+        ipcRenderer.send(IPC_OPEN_DIALOG, 5, title, content);
     },
     openMenu(menuKey, pos) {
         ipcRenderer.send(IPC_APPLICATION_MENU, menuKey, pos);

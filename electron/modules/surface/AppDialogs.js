@@ -9,6 +9,7 @@ const ID_INFO_TEST = 1;
 const ID_ABOUT_PANEL = 2;
 const ID_SETTING_WINDOW = 3;
 const ID_PICK_DIRECTORY = 4;
+const ID_CLIENT_ERROR = 5;
 
 class Dialogs {
     start() {
@@ -21,7 +22,7 @@ class Dialogs {
         ipcMain.removeHandler(IPC_OPEN_DIALOG);
     }
 
-    _onOpen = (ev, type) => {
+    _onOpen = (ev, type, ...args) => {
         switch (type) {
         case ID_INFO_TEST: {
             const versions = Object.keys(process.versions).map((k) => `${k}: ${process.versions[k]}`).join('\n');
@@ -41,6 +42,9 @@ class Dialogs {
             break;
         case ID_SETTING_WINDOW:
             settingWindow.create();
+            break;
+        case ID_CLIENT_ERROR:
+            dialog.showErrorBox(args[0], args[1]);
             break;
         default:
             break;

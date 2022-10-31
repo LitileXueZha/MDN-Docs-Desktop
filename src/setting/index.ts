@@ -38,7 +38,7 @@ async function onReady() {
     });
 
     $content.nextElementSibling?.addEventListener('click', async () => {
-        const { canceled, filePaths } = await mdv.openDialogAsync(4);
+        const { canceled, filePaths } = await mdv.pickDirectory();
         if (canceled) return;
         $content.value = filePaths[0] as string;
     });
@@ -48,7 +48,7 @@ async function onReady() {
     });
     setTranslationsNum();
     $translate.nextElementSibling?.addEventListener('click', async () => {
-        const { canceled, filePaths } = await mdv.openDialogAsync(4);
+        const { canceled, filePaths } = await mdv.pickDirectory();
         if (canceled) return;
         $translate.value = filePaths[0] as string;
         setTranslationsNum($translate.value);

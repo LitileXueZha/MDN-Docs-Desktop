@@ -32,6 +32,7 @@ MDN Docs Desktop 是一个离线的文档浏览器，依赖于内容仓库，对
 + 内置搜索引擎。新建搜索窗口，使用 Google 等等的高级 `site:` 选项搜索 mdn，拦截 url 点击请求跳转应用内。
 + Related Topics 宏优化。目前该功能使用 `{{SideBar}}` 宏定义在 `yari` 仓库中，考虑使用 `.ejs` 模板引擎提取数据。
 + 版权文件
++ caniuse 兼容性。内嵌 or 提取 bcd 仓库数据？待定
 
 ## Customization
 

@@ -14,6 +14,13 @@ import replace from '@rollup/plugin-replace';
 
 const IN_PRODUCTION = process.env.NODE_ENV === 'production';
 const DIR_OUTPUT = path.join(__dirname, 'dist');
+const rollupDefine = {
+    preventAssignment: true,
+    values: {
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+        __DEV__: String(!IN_PRODUCTION),
+    },
+};
 
 const ELECTRON = defineConfig({
     external: [
@@ -33,10 +40,7 @@ const ELECTRON = defineConfig({
         sourcemap: IN_PRODUCTION ? undefined : true,
     },
     plugins: [
-        replace({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-            __DEV__: String(!IN_PRODUCTION),
-        }),
+        replace(rollupDefine),
         alias({
             entries: [
                 { find: 'e', replacement: path.resolve(__dirname, 'electron') },
@@ -66,10 +70,7 @@ const JS = defineConfig({
         manualChunks: undefined,
     },
     plugins: [
-        replace({
-            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-            __DEV__: String(!IN_PRODUCTION),
-        }),
+        replace(rollupDefine),
         virtual({
             'in-plugin/sse': IN_PRODUCTION ? '' : fs.readFileSync('src/sse.js', 'utf-8'),
         }),
