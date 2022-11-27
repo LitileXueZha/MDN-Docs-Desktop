@@ -4,27 +4,29 @@ import hljs from 'highlight.js';
 import SearchIndex from 'src/utils/SearchIndex';
 import macro from 'src/plugins/Macro';
 
+onconnect = function onConnect(e: MessageEvent) {
+    const port = e.ports[0];
+    port.onmessage = function onMessage(ev: MessageEvent) {
+        const { task, payload } = ev.data;
+        const done = (data: any) => port.postMessage({ task, data });
 
-onmessage = function onMessage(e: MessageEvent) {
-    const { task, payload } = e.data;
-    const done = (data: any) => postMessage({ task, data });
-
-    switch (task) {
-    case 'search-index':
-        onSearchIndex(payload, done);
-        break;
-    case 'parse-docs':
-        onParseDoc(payload, done);
-        break;
-    case 'parse-docs-lazy':
-        onLazyParseDoc(payload, done);
-        break;
-    case 'highlight-code':
-        onHighlightCode(payload, done);
-        break;
-    default:
-        break;
-    }
+        switch (task) {
+        case 'search-index':
+            onSearchIndex(payload, done);
+            break;
+        case 'parse-docs':
+            onParseDoc(payload, done);
+            break;
+        case 'parse-docs-lazy':
+            onLazyParseDoc(payload, done);
+            break;
+        case 'highlight-code':
+            onHighlightCode(payload, done);
+            break;
+        default:
+            break;
+        }
+    };
 };
 
 function onParseDoc(data: Doc, done: Function) {

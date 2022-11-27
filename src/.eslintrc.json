@@ -16,7 +16,8 @@
         "@typescript-eslint"
     ],
     "globals": {
-        "mdv": "readonly"
+        "mdv": "readonly",
+        "onconnect": "writable"
     },
     "ignorePatterns": "**/*.d.ts",
     "rules": {

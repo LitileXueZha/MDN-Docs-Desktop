@@ -60,8 +60,9 @@ interface IMDV {
 
 declare interface Window {
     mdv: IMDV;
-    worker: Worker,
+    worker: SharedWorker,
 }
 declare const mdv: IMDV;
 declare module 'marked';
 declare const __DEV__: boolean;
+declare var onconnect: (this: Window, e: MessageEvent) => void;

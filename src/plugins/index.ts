@@ -43,19 +43,20 @@ export function initMenus() {
 export function doInWorker<T>(task: string, payload: any): Promise<T> {
     return new Promise((resolve, reject) => {
         if (!window.worker) {
-            window.worker = new Worker('/js/web-worker.js', { type: 'module' });
+            window.worker = new SharedWorker('/js/web-worker.js', { type: 'module' });
+            window.worker.port.start();
         }
         // Once listener
         const onMessage = (e: MessageEvent) => {
             const { task: doneTask, data } = e.data;
             if (doneTask === task) {
                 resolve(data);
-                window.worker.removeEventListener('message', onMessage);
+                window.worker.port.removeEventListener('message', onMessage);
             }
         };
-        window.worker.addEventListener('message', onMessage);
-        window.worker.addEventListener('error', reject);
-        window.worker.postMessage({ task, payload });
+        window.worker.port.addEventListener('message', onMessage);
+        window.worker.port.addEventListener('error', reject);
+        window.worker.port.postMessage({ task, payload });
     });
 }
 
