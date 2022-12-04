@@ -48,7 +48,7 @@
     "eslint": "^8.10.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.4",
-    "html-minifier-terser": "^7.0.0-alpha.1",
+    "html-minifier-terser": "^7.1.0",
     "rollup": "^2.77.2",
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.49.9",

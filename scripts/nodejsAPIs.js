@@ -100,6 +100,26 @@ const renderer = {
     },
 };
 
+const isJSFlavorSnippet = (lang) => lang === 'cjs' || lang === 'mjs';
+function walkTokens(token) {
+    if (token.type === 'space') return;
+    if (token.type === 'code') {
+        if (isJSFlavorSnippet(token.lang)) {
+            if (this.previousFlavor && this.previousFlavor !== token.lang) {
+                this.previousFlavor = false;
+                token.type = 'html';
+                token.raw = '';
+                token.text = '<!-- JSFlavor_REMOVED -->';
+                return;
+            }
+            this.previousFlavor = token.lang;
+        }
+        return;
+    }
+    // Only next code which is nodejs flavor will be removed.
+    this.previousFlavor = false;
+}
+
 function groupBy(filename) {
     const name = filename.substring(0, filename.length - 3);
     for (const id in GROUPS) {
@@ -149,10 +169,10 @@ async function buildDoc(nodeVersion, docPath = NODE_DOC) {
             html,
         };
     };
-    marked.use({ renderer });
+    marked.use({ renderer, walkTokens });
     await Promise.all(files.map(buildTask));
-    // await buildTask('documentation.md')
-    // await fs.writeFile('out.html', jsondata.api.documentation.html);
+    // await buildTask('inspector.md')
+    // await fs.writeFile('out.html', jsondata.api.inspector.html);
     return jsondata;
 }
 

@@ -39,7 +39,7 @@ class ContextMenu {
             {
                 label: '暗黑主题', type: 'checkbox', checked: aps.data.darkMode, click: this._onDarkModeClick,
             },
-            { label: '网页内查找', accelerator: 'CmdOrCtrl+F', click: this._onFindWidget },
+            { label: '页面内查找', accelerator: 'CmdOrCtrl+F', click: this._onFindWidget },
             {
                 label: '在 MDN 上查看', icon: this.icon, click: this._onMDNForward, id: 'mdn',
             },
