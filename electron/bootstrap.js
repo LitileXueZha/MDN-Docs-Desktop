@@ -40,26 +40,24 @@ export async function startup() {
         }
     });
     // app.addRecentDocument(path.join(__dirname, '../index.html'));
-    if (process.platform === 'win32') {
-        app.setUserTasks([
-            {
-                title: '新窗口',
-                description: '新建一个窗口',
-                program: process.execPath,
-                arguments: app.getAppPath(),
-                iconPath: process.execPath,
-                iconIndex: 0,
-            },
-            {
-                title: 'Node.js 文档',
-                description: '打开 Node.js 文档窗口',
-                program: process.execPath,
-                arguments: `${app.getAppPath()} --open-nodejs-api`,
-                iconPath: process.execPath,
-                iconIndex: 0,
-            },
-        ]);
-    }
+    app?.setUserTasks([
+        {
+            title: '新窗口',
+            description: '新建一个窗口',
+            program: process.execPath,
+            arguments: app.getAppPath(),
+            iconPath: process.execPath,
+            iconIndex: 0,
+        },
+        {
+            title: 'Node.js 文档',
+            description: '打开 Node.js 文档窗口',
+            program: process.execPath,
+            arguments: `${app.getAppPath()} --open-nodejs-api`,
+            iconPath: process.execPath,
+            iconIndex: 0,
+        },
+    ]);
     app.setName('MDN Docs Desktop');
     app.setAboutPanelOptions({
         applicationName: 'MDN Docs Desktop',

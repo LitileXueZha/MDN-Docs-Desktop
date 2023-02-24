@@ -50,6 +50,7 @@ function initDocRenderer($root: HTMLElement) {
     });
     const $home = $('.home-page');
     const $doc = $('#doc-container');
+    const $search = $('#search') as HTMLInputElement;
     const PATHNAME_HOME = '/index.html';
     let unwantedGoBack = false;
     let lastDisplayURL: string; // fix unexpected popstate event fired by hash change
@@ -74,6 +75,7 @@ function initDocRenderer($root: HTMLElement) {
             lastDisplayURL = pathname;
             $home.classList.remove('hidden');
             $doc.classList.add('hidden');
+            $search.value = '';
             return;
         }
         $home.classList.add('hidden');

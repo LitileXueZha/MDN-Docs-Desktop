@@ -9,10 +9,12 @@ class Search {
     $onScroll: HTMLElement;
     autoHide: boolean;
     HIGHLIGHT: string;
+    REG_LOCALE: RegExp;
     selectIndex: number;
 
     constructor(onScroll: HTMLElement) {
         this.HIGHLIGHT = 'highlight';
+        this.REG_LOCALE = /^\/([\w-]+)\//;
         this.$body = null;
         this.$onScroll = onScroll;
         this.readyLocales = new Set();
@@ -28,7 +30,7 @@ class Search {
 
             const query = el.value.trim();
             if (query) {
-                let locale = window.location.pathname.match(/^\/([\w-]+)\//)?.[1];
+                let locale = window.location.pathname.match(this.REG_LOCALE)?.[1];
                 if (!locale) {
                     locale = 'en-US';
                 }
@@ -69,13 +71,13 @@ class Search {
         el.addEventListener('keydown', (ev) => {
             if (!this.$body) return;
 
-            const keyUp = ev.key === 'ArrowUp';
-            const keyDown = ev.key === 'ArrowDown';
-            if (keyUp || keyDown) {
+            switch (ev.key) {
+            case 'ArrowUp':
+            case 'ArrowDown': {
                 let i = this.selectIndex;
                 this.$body.children[i]?.classList.remove(this.HIGHLIGHT);
 
-                if (keyDown) i++;
+                if (ev.key === 'ArrowDown') i++;
                 else i--;
                 const endIndex = this.$body.childElementCount - 1;
                 if (i > endIndex) i = 0;
@@ -84,22 +86,22 @@ class Search {
                 this.$body.children[i].classList.add(this.HIGHLIGHT);
                 this.selectIndex = i;
                 ev.preventDefault();
-                return;
+                break;
             }
-            const keyEnter = ev.key === 'Enter';
-            if (keyEnter && this.selectIndex > -1) {
-                // Bubble up to `this.$body.onclick` and hide
-                (this.$body.children[this.selectIndex] as HTMLElement).click();
+            case 'Enter':
+                if (this.selectIndex > -1) {
+                    // Bubble up to `this.$body.onclick` and hide
+                    (this.$body.children[this.selectIndex] as HTMLElement).click();
+                    el.blur();
+                } else if (this.$body.classList.contains('hidden')) {
+                    startSearch();
+                }
+                break;
+            case 'Escape':
                 el.blur();
-                return;
-            }
-            if (keyEnter && this.$body.classList.contains('hidden')) {
-                startSearch();
-                return;
-            }
-            const keyEsc = ev.key === 'Escape';
-            if (keyEsc) {
-                el.blur();
+                break;
+            default:
+                break;
             }
         });
     }
@@ -114,7 +116,7 @@ class Search {
                 .map(({ title, url }) => `
                     <a class="result-item" href="${url}" style="padding: 8px ${paddingLeft};">
                         <div class="title">${title}</div>
-                        <div class="url">${url}</div>
+                        <div class="url text-overhide">${url}</div>
                     </a>
                 `).join('');
         } else {

@@ -119,6 +119,9 @@ export function externalLinkTip(render: DocRender) {
         if (top > clientHeight / 2) {
             topTip = top - $tip.clientHeight;
         }
+        if (topTip > clientHeight) {
+            topTip = clientHeight - 100;
+        }
         if ($tip.offsetWidth + e.pageX > clientWidth) {
             leftTip = clientWidth - $tip.offsetWidth;
         }

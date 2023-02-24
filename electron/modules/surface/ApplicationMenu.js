@@ -14,7 +14,7 @@ class ApplicationMenu {
 
     build() {
         const home = Menu.buildFromTemplate([
-            { label: '回到首页', accelerator: 'CmdOrCtrl+`', click: this._onGoHome },
+            { label: '回到首页', accelerator: 'CmdOrCtrl+Tab', click: this._onGoHome },
             { label: '设置', accelerator: 'F1', click: this._onOpenSetting },
             { label: 'Node.js 文档', click: () => winNodejsApi.create() },
             { type: 'separator' },

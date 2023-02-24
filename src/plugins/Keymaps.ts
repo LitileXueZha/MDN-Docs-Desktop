@@ -16,9 +16,14 @@ export default function keymaps(ev: KeyboardEvent) {
         break;
     // Focus on search-box (only worked in MDN)
     case 'Slash':
-    case 'NumpadDivide':
-        $('#nav-input')?.focus();
+    case 'NumpadDivide': {
+        const $search = $('#nav-input') as HTMLInputElement;
+        if ($search) {
+            $search.focus();
+            $search.select();
+        }
         break;
+    }
     default:
         break;
     }

@@ -64,9 +64,9 @@ export function initScrollTop($root: HTMLElement) {
     const $sct = $('#scroll-top');
     const sctObserver = new IntersectionObserver((entry) => {
         if (entry[0].intersectionRatio > 0) {
-            $sct.style.visibility = 'hidden';
+            $sct.classList.add('anim-hide');
         } else {
-            $sct.style.visibility = 'visible';
+            $sct.classList.remove('anim-hide');
         }
     }, { root: $root });
     sctObserver.observe($('#sct-observe-helper'));
