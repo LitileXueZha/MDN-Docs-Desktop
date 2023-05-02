@@ -11,6 +11,7 @@ import winman from 'e/modules/service/WindowManager';
 import { version } from '../package.json';
 
 process.on('uncaughtException', (error) => {
+    console.error(error);
     dialog.showErrorBox('uncaughtException', error.stack);
     // app.quit();
 });
@@ -21,7 +22,8 @@ if (__DEV__) {
     process.env.DEBUG_COLORS = 1;
     log = require('debug')('log');
     process.on('unhandledRejection', (reason) => {
-        dialog.showErrorBox('unhandledRejection', reason);
+        console.error(reason);
+        dialog.showErrorBox('unhandledRejection', String(reason));
     });
 }
 

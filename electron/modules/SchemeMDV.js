@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import { protocol } from 'electron';
 import aps from 'e/modules/AppSettings';
 import { REG_DOC, REG_DOC_NODEJS } from 'e/constants';
+import {slugToFolder} from 'e/modules/util';
 
 export const MDV_NAME = 'mdv';
 export const MDV_SCHEME = {
@@ -39,19 +40,29 @@ export function registerSchemeMDV() {
          */
         if (hostname === 'internal-files') {
             const ext = path.extname(pathname).substring(1);
+            // Such as "for...of" "try..catch" is not valid extname.
+            const validExt = pathname.lastIndexOf(`..${ext}`) < 0;
             const mimeType = MIME_TYPES[ext];
             let filePath = path.join(DIR_ROOT, pathname);
             let matches;
 
             if (pathname === '' || pathname === '/') {
                 filePath = INDEX;
-            } else if (ext && (matches = pathname.match(REG_DOC))) {
-                const docAssetsDir = matches[1].toLowerCase() === 'en-us'
-                    ? aps.data.contentDir
-                    : aps.data.translateDir;
-                const assetPath = pathname.replace('/docs', '');
+            } else if (validExt && ext && (matches = pathname.match(REG_DOC))) {
+                const lang = matches[1].toLowerCase();
+                const mdnFolder = slugToFolder(pathname);
+                const assetPath = mdnFolder.replace('/docs', '');
 
-                filePath = path.join(docAssetsDir, 'files', assetPath);
+                filePath = path.join(aps.data.contentDir, 'files', assetPath.replace(lang, 'en-us'));
+                if (lang !== 'en-us') {
+                    // Find assets in translated-content first, if failed,
+                    // it mostly at content.
+                    const i18nAsset = path.join(aps.data.translateDir, 'files', assetPath);
+                    try {
+                        await fs.access(i18nAsset);
+                        filePath = i18nAsset;
+                    } catch (e) {}
+                }
             } else if (REG_DOC_NODEJS.test(pathname)) {
                 if (pathname.endsWith('.json')) {
                     // Request for jsondata, should not try the index
@@ -61,6 +72,8 @@ export function registerSchemeMDV() {
                     });
                 }
             } else {
+                const mdnFolder = slugToFolder(pathname);
+                filePath = path.join(DIR_ROOT, mdnFolder);
                 await fs.access(filePath).catch(() => {
                     // historyApiFallback
                     filePath = INDEX;

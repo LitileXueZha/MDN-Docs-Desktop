@@ -38,9 +38,16 @@ class Locales {
             try {
                 const baseDir = path.join(translateDir, 'files');
                 const readDirs = await fs.readdir(baseDir);
-                for (const dir of readDirs) {
-                    this._add(dir, translateDir);
-                }
+                // Some locales may be fronzen, leaved empty directory.
+                // https://github.com/mdn/translated-content/blob/main/PEERS_GUIDELINES.md#activating-a-locale
+                const checkActive = async (lang) => {
+                    const langDir = path.join(baseDir, lang);
+                    const files = await fs.readdir(langDir);
+                    if (files.length > 1 && files.indexOf('_redirects.txt') > -1) {
+                        this._add(lang, null, langDir);
+                    }
+                };
+                await Promise.all(readDirs.map(checkActive));
             } catch (e) {}
         }
     };
@@ -59,12 +66,12 @@ class Locales {
         return this.list.size - (english ? 1 : 0);
     };
 
-    _add = (id, base) => {
+    _add = (id, base, dir = '') => {
         const languageText = this.nativeText.get(id) || {};
         const localeValues = {
             ...languageText,
             id,
-            dir: path.join(base, 'files', id),
+            dir: dir || path.join(base, 'files', id),
         };
 
         this.list.set(id, localeValues);

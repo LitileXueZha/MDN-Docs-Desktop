@@ -82,7 +82,11 @@ export function enhancedScroll(this: HTMLElement | null) {
     else {
         hash = decodeURIComponent(hash);
         // Enchance scroll behavior when click the title
-        requestAnimationFrame(() => $(hash)?.scrollIntoView());
+        requestAnimationFrame(() => {
+            try {
+                $(hash).scrollIntoView();
+            } catch (e) {}
+        });
     }
 }
 

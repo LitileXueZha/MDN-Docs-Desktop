@@ -107,7 +107,7 @@ window.addEventListener('contextmenu', mdv.openContextMenu);
 window.addEventListener('keyup', keymaps);
 if (__DEV__) {
     window.addEventListener('error', (ev) => {
-        mdv.openErrorBox('Client error', ev.error.stack);
+        mdv.openErrorBox('Client error', ev.error?.stack || ev.message);
     });
     window.addEventListener('unhandledrejection', (ev) => {
         mdv.openErrorBox('Client unhandledrejection', ev.reason);

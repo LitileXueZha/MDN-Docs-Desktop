@@ -6,18 +6,13 @@ import { BrowserWindow, dialog, ipcMain } from 'electron';
 import aps from 'e/modules/AppSettings';
 import { IPC_READ_CONTENT, IPC_READ_PARENT_CONTENT, IPC_READ_TRANSLATE_CONTENT } from 'e/constants';
 import locales from './Locales';
+import {slugToFolder} from 'e/modules/util';
 
 const REG_CONTENT_URL = /^\/([a-z]{2}(-\w+)?)\/docs\/(.+)/;
 const REG_REDIRECT_SEPARATOR = /\t+/;
 const INDEX_HTML = 'index.html';
 const INDEX_MARKDOWN = 'index.md';
 const REDIRECT_FILE = '_redirects.txt';
-const SLUG_FOLDERS = {
-    '*': '_star_',
-    ':': '_colon_',
-    '::': '_doublecolon_',
-    '?': '_question_',
-};
 
 const ERR_INVALID = 1;
 const ERR_INCORRECT_SETTGINS = 2;
@@ -49,6 +44,7 @@ class ContentProvider {
         const doc = await this._getContentByURL(route);
 
         if (doc) {
+            aps.data.lastOpenDoc = doc.path;
             return doc;
         }
 
@@ -104,8 +100,7 @@ class ContentProvider {
         }
 
         const { dir, native } = localeValues;
-        const slugPath = this._slugToFolder(slug);
-        let folder = path.join(dir, slugPath);
+        let folder = path.join(dir, slugToFolder(slug));
 
         await fs.access(folder).catch(() => {
             folder = false;
@@ -135,6 +130,7 @@ class ContentProvider {
 
         if (raw) {
             return {
+                path: filePath,
                 raw,
                 isMarkdown,
                 locale,
@@ -161,6 +157,7 @@ class ContentProvider {
             crlfDelay: Infinity,
         });
 
+        reader.on('error', reject);
         reader.on('line', (line) => {
             if (!line) return;
             if (line[0] === '#') return; // comments
@@ -224,23 +221,6 @@ class ContentProvider {
         await find();
         return translations;
     };
-
-    _slugToFolder(slug) {
-        const replacements = [];
-        for (let i = 0, len = slug.length; i < len; i++) {
-            const s = slug[i];
-            const ss = s + slug[i + 1];
-            if (SLUG_FOLDERS[ss]) {
-                replacements.push(SLUG_FOLDERS[ss]);
-                i++;
-            } else if (SLUG_FOLDERS[s]) {
-                replacements.push(SLUG_FOLDERS[s]);
-            } else {
-                replacements.push(s);
-            }
-        }
-        return replacements.join('');
-    }
 
     _normalizedURL(originalURL) {
         const { pathname } = new URL(originalURL);

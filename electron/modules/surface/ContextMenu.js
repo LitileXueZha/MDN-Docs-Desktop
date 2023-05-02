@@ -54,6 +54,7 @@ class ContextMenu {
                 { label: '开发者菜单', enabled: false },
                 { label: '检查', role: 'toggleDevTools', accelerator: 'F12' },
                 { label: '设置', accelerator: 'F1', click: this._onOpenSetting },
+                { label: '打开Markdown文件', click: this._onOpenMarkdown },
                 { label: '重新启动', click: this._onRelaunch },
                 { label: '退出', role: 'quit' },
             ]));
@@ -126,6 +127,25 @@ class ContextMenu {
 
     _onOpenSetting = (ev, win) => {
         ipcMain.emit(IPC_OPEN_DIALOG, null, 3);
+    };
+
+    _onOpenMarkdown = (evt, win) => {
+        const url = win.webContents.getURL();
+        if (url.indexOf('docs') > -1) {
+            const {pathname} = new URL(url);
+            const currentLocale = pathname.split('/')[1].toLowerCase();
+            const dir = currentLocale === 'en-us' ? aps.data.contentDir : aps.data.translateDir;
+            const parts = path.join(dir, 'files', currentLocale);
+            // The lastOpenDoc is defined at ContentProvider
+            const currentDoc = aps.data.lastOpenDoc.replace(/.*files[\\/][\w-]+/, parts);
+            shell.openExternal(currentDoc)
+                .catch(() => {
+                    const ext = currentDoc.split('.');
+                    const alter = ext.pop() === 'html' ? 'md' : 'html';
+                    ext.push(alter);
+                    return shell.openExternal(ext.join('.'));
+                });
+        }
     };
 
     _onRelaunch = (e) => {
